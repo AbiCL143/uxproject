@@ -14,6 +14,7 @@ const NavBar = () => {
           {/* Links a la derecha */}
           <Nav className="ms-auto">
             <Nav.Link href="#perfil">Perfil</Nav.Link>
+            <Nav.Link href="#perfil">Bienvenido</Nav.Link>
             <Nav.Link href="#historial">Historial</Nav.Link>
             <Nav.Link href="#evaluando">Evaluando</Nav.Link>
           </Nav>
