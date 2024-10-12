@@ -11,7 +11,16 @@ module.exports = {
       colors:{
         'fondo': '#131314',
         'cards': '#1E1F20 ',
-        'botones': '#333537'
+        'botones': '#333537',
+        'importante': '#041E49',
+        'Degradado1': '#5082ED ',
+        'Degradado2': '#D76676',
+        'suptitulo': '#484B4A',
+        'iconos': '#C6C9C7',
+        'boton2': '#000000',
+        'letras': '#3777C3',
+        'boton3': '#1B1B1B'
+
       }
     },
   },
