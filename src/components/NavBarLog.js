@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser,faBars,faHouse,faFileContract } from "@fortawesome/free-solid-svg-icons";
 import { faWindows } from "@fortawesome/free-brands-svg-icons";
+import {Link} from 'react-router-dom';
 
 const NavBarLog = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -58,22 +59,22 @@ const NavBarLog = () => {
     {/* Lista del menú */}
     <ul className="mt-6 space-y-2 font-medium">
         <li>
-            <a href="#" className="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-gray-500 dark:hover:bg-gray-700 group">
+            <Link to="/home"  className="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-gray-500 dark:hover:bg-gray-700 group">
                 <FontAwesomeIcon icon={faHouse} style={{color:"#ffffff"}} />
                 <span className="ms-3">Inicio</span>
-            </a>
+            </Link>
         </li>
         <li>
-            <a href="#" className="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-gray-500 dark:hover:bg-gray-700 group">
+            <Link  to="/rubricas" className="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-gray-500 dark:hover:bg-gray-700 group">
                 <FontAwesomeIcon icon={faFileContract} style={{color:"#ffffff"}} />
                 <span className="flex-1 ms-3 whitespace-nowrap">Rubricas</span>
-            </a>
+            </Link>
         </li>
         <li>
-            <a href="#" className="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-gray-500 dark:hover:bg-gray-700 group">
+            <Link to="#" className="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-gray-500 dark:hover:bg-gray-700 group">
             <FontAwesomeIcon icon={faWindows} style={{color:"#ffffff"}} />
                 <span className="flex-1 ms-3 whitespace-nowrap">Software</span>
-            </a>
+            </Link>
         </li>
         {/* Añadir más elementos según sea necesario */}
     </ul>
