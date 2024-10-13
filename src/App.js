@@ -7,6 +7,7 @@ import LandingPage from './pages/lading_page';
 import Login from './pages/login';
 import Registrer from './pages/registrer';
 import HomePage from './pages/home_page';
+import Rubricas from './pages/rubricas';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
       <Route path='/login' element={<Login/>} />
       <Route path='/registrer' element={<Registrer/>} />
       <Route path='/home' element={<HomePage/>} />
+      <Route path='/rubricas' element={<Rubricas/>}/>
       </Routes>
     </Router>
   );
