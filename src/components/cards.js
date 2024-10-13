@@ -16,7 +16,7 @@ const Card = ({title, link, icono, className})=>{
         }
       };
     return(
-        <a href="#" className={`block max-w-sm  h-52 w-52 p-6 bg-cards  rounded-lg shadow hover:bg-cards hover:bg-opacity-80 dark:bg-gray-800 dark:border-gray-700 ${className} `}>
+        <a href={link} className={`block max-w-sm  h-52 w-52 p-6 bg-cards  rounded-lg shadow hover:bg-cards hover:bg-opacity-80 dark:bg-gray-800 dark:border-gray-700 ${className} `}>
   <div className="flex flex-col items-center justify-center h-full">
     <div className="mb-4">
       <FontAwesomeIcon icon={getIcon(title)} transform="grow-70" style={{ color: "#ffffff" }} />
