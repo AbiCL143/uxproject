@@ -8,6 +8,7 @@ import Login from './pages/login';
 import Registrer from './pages/registrer';
 import HomePage from './pages/home_page';
 import Rubricas from './pages/rubricas';
+import Registro_software from './pages/registro_software';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
       <Route path='/registrer' element={<Registrer/>} />
       <Route path='/home' element={<HomePage/>} />
       <Route path='/rubricas' element={<Rubricas/>}/>
+      <Route path='/registro_software' element={<Registro_software/>}/>
       </Routes>
     </Router>
   );
