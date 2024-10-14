@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 function NuevaRubrica() {
     const [selectedId, setSelectedId] = useState(null);  // Estado para manejar la tarjeta seleccionada
+    const [toggleStates, setToggleStates] = useState([false, false, false]); // Estados para manejar múltiples toggles
 
     const cardsData = [
         { id: 1, title: 'Where are you', subtitle: 'Criterios de usabilidad', icon: 'usabilidad' },
@@ -13,6 +14,18 @@ function NuevaRubrica() {
         { id: 4, title: 'Centrada en el usuario', subtitle: 'Descripción de centrada en el usuario', icon: 'centradaEnElUsuario' },
         { id: 5, title: 'Consistencia', subtitle: 'Descripción de consistencia', icon: 'consistencia' },
     ];
+
+    const descriptions = [
+        'Habilitar criterio de accesibilidad',
+        'Permitir opción de simplicidad',
+        'Optimización centrada en el usuario',
+    ];
+
+    const handleToggleChange = (index) => {
+        const updatedToggles = [...toggleStates];
+        updatedToggles[index] = !updatedToggles[index]; // Cambia el estado del toggle en la posición indicada
+        setToggleStates(updatedToggles);
+    };
 
     return (
         <div className="contentcontent w-screen h-screen flex items-center justify-center bg-fondo">
@@ -62,10 +75,27 @@ function NuevaRubrica() {
                                         exit={{ scale: 0.7 }}   // Vuelve a hacerse pequeño al cerrar
                                         transition={{ duration: 0.5 }}  // Control del tiempo de la animación
                                     >
-                                        {/* No mostramos el icono aquí, solo el título y el subtítulo */}
-                                        <motion.h5 className="text-xl font-semibold">{item.subtitle}</motion.h5>
-                                        <motion.h2 className="text-3xl font-bold mb-4">{item.title}</motion.h2>
-                                        <motion.button onClick={() => setSelectedId(null)} className="px-4 py-2 bg-red-500 text-white rounded-lg">
+                                        {/* Cambios de color en el subtítulo y el título */}
+                                        <motion.h5 className="text-xl font-semibold text-blue-300">{item.subtitle}</motion.h5> {/* Subtítulo en azul claro */}
+                                        <motion.h2 className="text-3xl font-bold mb-4 text-yellow-400">{item.title}</motion.h2> {/* Título en amarillo */}
+
+                                        {/* Mapeamos las descripciones y toggles */}
+                                        <div className="mt-4">
+                                            {descriptions.map((description, index) => (
+                                                <div key={index} className="mb-4 flex items-center justify-between">
+                                                    {/* Texto y toggle en una sola línea */}
+                                                    <p className="text-white">{description}</p>
+                                                    {/* Toggle Switch */}
+                                                    <label className="inline-flex items-center cursor-pointer">
+                                                        <input type="checkbox" checked={toggleStates[index]} onChange={() => handleToggleChange(index)} className="sr-only peer" />
+                                                        <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                                                    </label>
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        {/* Botón para cerrar el modal */}
+                                        <motion.button onClick={() => setSelectedId(null)} className="px-4 py-2 bg-red-500 text-white rounded-lg mt-6">
                                             Cerrar
                                         </motion.button>
                                     </motion.div>
