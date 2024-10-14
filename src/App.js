@@ -11,6 +11,7 @@ import Rubricas from './pages/rubricas';
 import Registro_software from './pages/registro_software';
 import Evaluacion_de_Software from './pages/evaluacion_de_Software';
 import NuevaRubrica from './pages/nuevaRubrica';
+import Resumen_de_Rubrica from './pages/resumen_de_Rubrica';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
       <Route path='/registro_software' element={<Registro_software/>}/>
       <Route path='/evaluacion_de_Software' element={<Evaluacion_de_Software/>}/>
       <Route path='/nuevaRubrica' element={<NuevaRubrica/>}/>
+      <Route path='/resumen_de_rubrica' element={<Resumen_de_Rubrica/>}/>
 
       </Routes>
     </Router>

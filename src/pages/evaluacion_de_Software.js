@@ -1,4 +1,5 @@
 import React from 'react';
+import NavBarLog from '../components/NavBarLog';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 
@@ -7,7 +8,15 @@ function evaluacion_de_Software() {
 
         <div class="content w-screen h-screen flex items-center justify-center bg-fondo">
 
+            <NavBarLog />
+
+            
+
             <div class="container-content w-3/4 h-3/4 mx-auto">
+
+                <div className="text-4xl font-bold text-left bg-gradient-to-r from-blue-500 from-1% to-Degradado2 bg-clip-text text-transparent pt-6 pb-6">
+                    Evaluacion de rubrica
+                </div>
 
                 <div class="grid grid-cols-4 gap-4 relative border-s border-blue-500 dark:border-gray-700 bg-cards rounded-tr-lg">
 

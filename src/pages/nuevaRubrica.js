@@ -7,7 +7,7 @@ function NuevaRubrica() {
     const [selectedId, setSelectedId] = useState(null);  // Estado para manejar la tarjeta seleccionada
 
     const cardsData = [
-        { id: 1, title: 'Usabilidad', subtitle: 'Descripción de usabilidad', icon: 'usabilidad' },
+        { id: 1, title: 'Where are you', subtitle: 'Criterios de usabilidad', icon: 'usabilidad' },
         { id: 2, title: 'Accesibilidad', subtitle: 'Descripción de accesibilidad', icon: 'accesibilidad' },
         { id: 3, title: 'Simplicidad', subtitle: 'Descripción de simplicidad', icon: 'simplicidad' },
         { id: 4, title: 'Centrada en el usuario', subtitle: 'Descripción de centrada en el usuario', icon: 'centradaEnElUsuario' },
@@ -34,7 +34,7 @@ function NuevaRubrica() {
                                     <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5v10M3 5a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm0 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm12 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm0 0V6a3 3 0 0 0-3-3H9m1.5-2-2 2 2 2" />
                                 </svg>
                             </div>
-                            <input type="text" id="simple-search" className="bg-cards border border-cards text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5" placeholder="Ingresa el nombre que tendra tu rubrica..." required />
+                            <input type="text" id="simple-search" className="bg-cards border border-cards text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5" placeholder="Ingresa el nombre que tendra tu rubrica..." required />
                         </div>
                     </form>
                 </div>
