@@ -10,6 +10,7 @@ import HomePage from './pages/home_page';
 import Rubricas from './pages/rubricas';
 import Registro_software from './pages/registro_software';
 import Software from './pages/softwares';
+import Prueba from './pages/prueba';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
       <Route path='/rubricas' element={<Rubricas/>}/>
       <Route path='/registro_software' element={<Registro_software/>}/>
       <Route path='/software' element={<Software/>}/>
+      <Route path='/prueba' element={<Prueba/>}/>
       </Routes>
     </Router>
   );
