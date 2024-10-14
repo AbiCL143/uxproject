@@ -28,6 +28,7 @@ function Login() {
        if (response.status === 200) {
         console.log('Inicio de sesión exitoso',data);
         localStorage.setItem('token', data.token);
+        localStorage.setItem('id',data.id)
         Navigate('/home');
 
       }else{

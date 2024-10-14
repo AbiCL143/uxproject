@@ -9,6 +9,7 @@ import Registrer from './pages/registrer';
 import HomePage from './pages/home_page';
 import Rubricas from './pages/rubricas';
 import Registro_software from './pages/registro_software';
+import Software from './pages/softwares';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
       <Route path='/home' element={<HomePage/>} />
       <Route path='/rubricas' element={<Rubricas/>}/>
       <Route path='/registro_software' element={<Registro_software/>}/>
+      <Route path='/software' element={<Software/>}/>
       </Routes>
     </Router>
   );
