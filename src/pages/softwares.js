@@ -1,5 +1,5 @@
 import React from 'react';
-import NavBarLog from '../components/NavBar';
+import NavBarLog from '../components/NavBarLog';
 import Card from '../components/cards';
 import {useState,useEffect} from 'react';
 
