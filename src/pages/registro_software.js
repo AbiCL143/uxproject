@@ -28,7 +28,7 @@ function Registro_software(){
       const data = await response.json();
       if(response.ok){
         console.log('Registro exitoso',data);
-        Navigate('/software');
+        Navigate('/softwares');
       }else{
         console.log('Error en registro',data);
       }

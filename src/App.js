@@ -28,6 +28,7 @@ function App() {
       <Route path='/evaluacion_de_Software' element={<Evaluacion_de_Software/>}/>
       <Route path='/nuevaRubrica' element={<NuevaRubrica/>}/>
       <Route path='/resumen_de_rubrica' element={<Resumen_de_Rubrica/>}/>
+      <Route path='/softwares' element={<Software/>}/>
 
       </Routes>
     </Router>

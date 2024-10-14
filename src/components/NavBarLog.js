@@ -71,7 +71,7 @@ const NavBarLog = () => {
             </Link>
         </li>
         <li>
-            <Link to="/software" className="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-gray-500 dark:hover:bg-gray-700 group">
+            <Link to="/softwares" className="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-gray-500 dark:hover:bg-gray-700 group">
             <FontAwesomeIcon icon={faWindows} style={{color:"#ffffff"}} />
                 <span className="flex-1 ms-3 whitespace-nowrap">Software</span>
             </Link>
