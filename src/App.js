@@ -9,6 +9,9 @@ import Registrer from './pages/registrer';
 import HomePage from './pages/home_page';
 import Rubricas from './pages/rubricas';
 import Registro_software from './pages/registro_software';
+import Evaluacion_de_Software from './pages/evaluacion_de_Software';
+import NuevaRubrica from './pages/nuevaRubrica';
+import Resumen_de_Rubrica from './pages/resumen_de_Rubrica';
 import Software from './pages/softwares';
 import Prueba from './pages/prueba';
 
@@ -22,8 +25,10 @@ function App() {
       <Route path='/home' element={<HomePage/>} />
       <Route path='/rubricas' element={<Rubricas/>}/>
       <Route path='/registro_software' element={<Registro_software/>}/>
-      <Route path='/software' element={<Software/>}/>
-      <Route path='/prueba' element={<Prueba/>}/>
+      <Route path='/evaluacion_de_Software' element={<Evaluacion_de_Software/>}/>
+      <Route path='/nuevaRubrica' element={<NuevaRubrica/>}/>
+      <Route path='/resumen_de_rubrica' element={<Resumen_de_Rubrica/>}/>
+
       </Routes>
     </Router>
   );
