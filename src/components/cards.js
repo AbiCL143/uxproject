@@ -16,17 +16,19 @@ const Card = ({title, link, icono, className})=>{
         }
       };
     return(
-        <a href={link} className={`block max-w-sm  h-52 w-52 p-6 bg-cards  rounded-lg shadow hover:bg-cards hover:bg-opacity-80 dark:bg-gray-800 dark:border-gray-700 ${className} `}>
-  <div className="flex flex-col items-center justify-center h-full">
-    <div className="mb-4">
-      <FontAwesomeIcon icon={getIcon(title)} transform="grow-70" style={{ color: "#ffffff" }} />
+      <div>
+  <a href={link} className={`block max-w-sm h-52 w-52 p-6 bg-cards rounded-lg shadow hover:bg-cards hover:bg-opacity-80 dark:bg-gray-800 dark:border-gray-700 ${className}`}>
+    <div className="flex flex-col items-center justify-center h-full">
+      <div className="mb-4">
+        <FontAwesomeIcon icon={getIcon(title)} transform="grow-70" style={{ color: "#ffffff" }} />
+      </div>
+      <h5 className="text-2xl font-bold tracking-tight text-white text-center mt-6 overflow-hidden text-ellipsis whitespace-normal">
+        {title}
+      </h5>
     </div>
-    <br></br>
-    <h5 className="text-2xl font-bold tracking-tight text-white text-center overflow-hidden text-ellipsis whitespace-nowrap">
-      {title}
-    </h5>
-  </div>
-</a>
+  </a>
+</div>
+
 
       
       
