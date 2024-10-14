@@ -2,13 +2,16 @@ import React, { useState } from 'react';
 import NavBarLog from '../components/NavBarLog';
 import Card from '../components/cards';
 import { motion, AnimatePresence } from "framer-motion";
+import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 function NuevaRubrica() {
     const [selectedId, setSelectedId] = useState(null);  // Estado para manejar la tarjeta seleccionada
     const [toggleStates, setToggleStates] = useState([false, false, false]); // Estados para manejar múltiples toggles
 
     const cardsData = [
-        { id: 1, title: 'Where are you', subtitle: 'Criterios de usabilidad', icon: 'usabilidad' },
+        { id: 1, title: 'Usabilidad', subtitle: 'Criterios de usabilidad', icon: 'usabilidad' },
         { id: 2, title: 'Accesibilidad', subtitle: 'Descripción de accesibilidad', icon: 'accesibilidad' },
         { id: 3, title: 'Simplicidad', subtitle: 'Descripción de simplicidad', icon: 'simplicidad' },
         { id: 4, title: 'Centrada en el usuario', subtitle: 'Descripción de centrada en el usuario', icon: 'centradaEnElUsuario' },
@@ -103,6 +106,11 @@ function NuevaRubrica() {
                         </motion.div>
                     )}
                 </AnimatePresence>
+            </div>
+            <div className=''>
+                {/* Botón para pasar a la siguiente página */}
+               
+            <Link to="/resumen_de_rubrica" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">  <FontAwesomeIcon icon={faArrowRight} className="text-white text-4xl" /> </Link>
             </div>
         </div>
     );

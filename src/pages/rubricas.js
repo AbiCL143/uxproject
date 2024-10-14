@@ -41,7 +41,7 @@ function Rubricas() {
                 <span className='text-white underline text-6xl'>Rubricas</span>
                 <div className='mt-7 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mx-auto'>
                     {/* Tarjeta para agregar nueva */}
-                    <Card title='Agregar Nueva' icono='nueva' className='border-dashed border-2 border-white'  />
+                    <Card title='Agregar Nueva' icono='nueva' className='border-dashed border-2 border-white' link="/nuevaRubrica"  />
                     {/* Usar map para crear las tarjetas dinámicamente */}
                     {cardsData.map((card, index) => (
                         <Card key={index} title={card.nombre_rubrica} icono={card.icon}  />
