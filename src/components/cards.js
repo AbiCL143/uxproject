@@ -52,3 +52,4 @@ const Card = ({ title, link, icono, className }) => {
 };
 
 export default Card;
+ 
