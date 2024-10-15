@@ -2,7 +2,14 @@ import React, { useState } from 'react';
 import NavBarLog from '../components/NavBarLog';
 import RúbricaPDF from '../components/descargar'; // Asegúrate de ajustar la ruta
 import { Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 function Resumen_de_Rubrica() {
+    const location = useLocation();
+
+    // Acceder al JSON enviado desde la página anterior
+    const jsonRecibido = location.state?.jsonToSend || [];
+    console.log(jsonRecibido);
+
     const [openIndex, setOpenIndex] = useState(null);
     const data = {
         "nombre_rubrica": "Evaluación de Usabilidad y Accesibilidad",
