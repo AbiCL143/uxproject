@@ -5,7 +5,7 @@ function Prueba() {
     // Define la variable de datos como un array de strings
    
     
-    
+    const data ={}
     
 
     return (
