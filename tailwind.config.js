@@ -19,7 +19,12 @@ module.exports = {
         'iconos': '#C6C9C7',
         'boton2': '#000000',
         'letras': '#3777C3',
-        'boton3': '#1B1B1B'
+        'boton3': '#1B1B1B',
+        'newFondo':'#001F3F',
+        'newCards':'#B0BEC5',
+        'newTitulos':'#6A9AB0',
+        'selecCriterio': '#fffff'
+
 
       }
     },
