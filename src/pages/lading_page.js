@@ -20,9 +20,7 @@ function LandingPage() {
       </div> 
       <br/>
       
-      <button type='button' className='bg-boton3 text-letras rounded-lg px-2 border border-black hover:bg-gray-700 hover:text-white active:bg-boton2 active:text-letras'>
-      Comenzar ahora
-      </button>
+      
 
 
       </header>
