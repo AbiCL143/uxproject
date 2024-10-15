@@ -13,6 +13,7 @@ import Evaluacion_de_Software from './pages/evaluacion_de_Software';
 import NuevaRubrica from './pages/nuevaRubrica';
 import Resumen_de_Rubrica from './pages/resumen_de_Rubrica';
 import Software from './pages/softwares';
+import EvaluarSoftware from './components/evaluarSoftware';
 // pruebas de back
 import Prueba from './pages/prueba';
 import NewRubric from './pages/newRubric';
@@ -37,6 +38,7 @@ function App() {
       <Route path='/softwares' element={<Software/>}/>
       <Route path='/newRubric' element={<NewRubric/>}/>
       <Route path='/newSelectCriterion' element={<NewSelectCriterion/>}/>
+      <Route path='/evaluarSoftware' element={<EvaluarSoftware/>}/>
 
       {/* pruebas de back */}
       <Route path='/selectCards' element={<SeleccionarCards/>}/>
