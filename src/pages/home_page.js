@@ -10,9 +10,9 @@ function HomePage() {
     <Navbar className="pl-5" />
     <div className='mt-16 pt-16'>
       <div className='flex justify-center gap-6 mt-9'>
-      <Card title="Nueva Rubrica" icono="nueva"/>
-      <Card title="Evaluar"  icono="calificar" />
-      <Card title="Ver rubricas"       icono="rubricas" />
+      <Card title="Nueva Rubrica" icono="nueva" link="/nuevaRubrica" />
+      <Card title="Evaluar"  icono="calificar" link="#" />
+      <Card title="Ver rubricas"       icono="rubricas" link="/rubricas" />
       </div>
     </div>
   </div>

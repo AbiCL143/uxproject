@@ -12,6 +12,8 @@ import Registro_software from './pages/registro_software';
 import Evaluacion_de_Software from './pages/evaluacion_de_Software';
 import NuevaRubrica from './pages/nuevaRubrica';
 import Resumen_de_Rubrica from './pages/resumen_de_Rubrica';
+import Software from './pages/softwares';
+import Prueba from './pages/prueba';
 
 function App() {
   return (
