@@ -5,3 +5,24 @@
 @import 'tailwindcss/tailwind.css';
 @import 'flowbite';
 @import 'animate.css';
+
+/* Personalización del scrollbar */
+.container-content::-webkit-scrollbar {
+    width: 8px; /* Ajusta el ancho del scrollbar */
+  }
+  
+  .container-content::-webkit-scrollbar-thumb {
+    background-color: rgba(31, 41, 55, 0.7); /* Color oscuro para el thumb */
+    border-radius: 4px; /* Bordes redondeados */
+  }
+  
+  .container-content::-webkit-scrollbar-track {
+    background: transparent; /* Hacer el fondo del track transparente */
+  }
+  
+  /* Soporte para Firefox */
+  .container-content {
+    scrollbar-color: white transparent;
+    scrollbar-width: thin; /* Scrollbar más delgado */
+  }
+  

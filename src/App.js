@@ -14,6 +14,7 @@ import NuevaRubrica from './pages/nuevaRubrica';
 import Resumen_de_Rubrica from './pages/resumen_de_Rubrica';
 import Software from './pages/softwares';
 import Prueba from './pages/prueba';
+import NewRubric from './pages/newRubric';
 
 function App() {
   return (
@@ -28,7 +29,7 @@ function App() {
       <Route path='/evaluacion_de_Software' element={<Evaluacion_de_Software/>}/>
       <Route path='/nuevaRubrica' element={<NuevaRubrica/>}/>
       <Route path='/resumen_de_rubrica' element={<Resumen_de_Rubrica/>}/>
-
+      <Route path='/newRubric' element={<NewRubric/>}/>
       </Routes>
     </Router>
   );
