@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import fondo from '../assets/fondo.jpg';
 
 function NuevaRubrica() {
     const [selectedId, setSelectedId] = useState(null);  // Estado para manejar la tarjeta seleccionada
@@ -31,10 +32,13 @@ function NuevaRubrica() {
     };
 
     return (
-        <div className="contentcontent w-screen h-screen flex items-center justify-center bg-fondo">
+        <div className="h-screen overflow-hidden" style={{ backgroundImage: `url(${fondo})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
             <NavBarLog />
 
-            <div className='container-content w-3/4 h-3/4 mx-auto'>
+            {/* Fondo oscuro semi-transparente */}
+            <div className="absolute inset-0 bg-black opacity-30"></div>
+
+            <div className='container-content w-3/4 h-3/4 mx-auto relative z-10'>
                 <div className="text-4xl font-bold text-left bg-gradient-to-r from-blue-500 from-1% to-Degradado2 bg-clip-text text-transparent">
                     Crea tu rúbrica
                 </div>
@@ -50,7 +54,7 @@ function NuevaRubrica() {
                                     <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5v10M3 5a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm0 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm12 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm0 0V6a3 3 0 0 0-3-3H9m1.5-2-2 2 2 2" />
                                 </svg>
                             </div>
-                            <input type="text" id="simple-search" className="bg-cards border border-cards text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5" placeholder="Ingresa el nombre que tendra tu rubrica..." required />
+                            <input type="text" id="simple-search" className="bg-cards border border-cards text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5" placeholder="Ingresa el nombre que tendrá tu rúbrica..." required />
                         </div>
                     </form>
                 </div>
@@ -107,11 +111,20 @@ function NuevaRubrica() {
                     )}
                 </AnimatePresence>
             </div>
-            <div className=''>
+
+            <div className="absolute right-0 top-1/2 transform -translate-y-1/2 mr-4">
                 {/* Botón para pasar a la siguiente página */}
-               
-            <Link to="/resumen_de_rubrica" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">  <FontAwesomeIcon icon={faArrowRight} className="text-white text-4xl" /> </Link>
+                <Link to="/resumen_de_rubrica"
+                    type="button"
+                    className="text-white hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-8 py-4" // Aumentar el tamaño
+                    style={{ backgroundColor: '#003366' }}> {/* Color más claro */}
+                    <FontAwesomeIcon icon={faArrowRight} className="text-white text-2xl" />
+                </Link>
             </div>
+
+
+
+
         </div>
     );
 }
