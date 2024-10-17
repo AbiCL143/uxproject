@@ -20,6 +20,7 @@ import NewRubric from './pages/newRubric';
 import NewSelectCriterion from './pages/newSelectCriterion';
 import SeleccionarCards from './pages/pruebas/seleccionarCards';
 import MostrarCriterios from './pages/pruebas/mostrarCriterios';
+import Preguntas from './pages/preguntas';
 
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
       <Route path='/newRubric' element={<NewRubric/>}/>
       <Route path='/newSelectCriterion' element={<NewSelectCriterion/>}/>
       <Route path='/evaluarSoftware' element={<EvaluarSoftware/>}/>
+      <Route path='/preguntas' element={<Preguntas/>}/>
 
       {/* pruebas de back */}
       <Route path='/selectCards' element={<SeleccionarCards/>}/>

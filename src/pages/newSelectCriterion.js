@@ -80,7 +80,7 @@ function NewSelectCriterion() {
             preguntas: item.criterio.preguntas.map(pregunta => pregunta.pregunta)
         }));
 
-        navigate('/resumen_de_rubrica', { state: { jsonToSend } });
+        navigate('/preguntas', { state: { jsonToSend } });
     };
 
     return (
