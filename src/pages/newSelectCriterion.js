@@ -3,7 +3,7 @@ import NavBarLog from '../components/NavBarLog';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 
-function newSelectCriterion() {
+function NewSelectCriterion() {
     return (
 
         <div class="content w-screen h-screen flex flex-col items-center justify-center bg-newFondo">
@@ -104,4 +104,4 @@ function newSelectCriterion() {
     );
 };
 
-export default newSelectCriterion;
+export default NewSelectCriterion;

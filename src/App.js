@@ -15,7 +15,7 @@ import Resumen_de_Rubrica from './pages/resumen_de_Rubrica';
 import Software from './pages/softwares';
 import Prueba from './pages/prueba';
 import NewRubric from './pages/newRubric';
-import NewSelectCriterion from './pages/newSelectCriterion';
+import NewSelectCriterion from './pages/newSelectcriterion';
 
 function App() {
   return (
