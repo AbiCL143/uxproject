@@ -9,6 +9,7 @@ function Preguntas() {
 
     const [newQuestions, setNewQuestions] = useState({});
     const [originalQuestions, setOriginalQuestions] = useState(jsonRecibido.map(item => item.preguntas.slice()));
+    const [addedQuestions, setAddedQuestions] = useState([]); // Estado para almacenar las nuevas preguntas
 
     const handleInputChange = (e, id) => {
         const { value } = e.target;
@@ -22,10 +23,15 @@ function Preguntas() {
         const itemIndex = jsonRecibido.findIndex(item => item.id === id);
         if (newQuestions[id]) {
             jsonRecibido[itemIndex].preguntas.push(newQuestions[id]);
+            setAddedQuestions(prevState => [
+                ...prevState,
+                { id, pregunta: newQuestions[id] }
+            ]);
             setNewQuestions(prevState => ({
                 ...prevState,
                 [id]: ''
             }));
+            console.log('Nuevas Preguntas:', [...addedQuestions, { id, pregunta: newQuestions[id] }]);
         }
     };
 
@@ -34,10 +40,8 @@ function Preguntas() {
         const isOriginal = originalQuestions[itemIndex].includes(pregunta);
         if (!isOriginal) {
             jsonRecibido[itemIndex].preguntas = jsonRecibido[itemIndex].preguntas.filter(q => q !== pregunta);
-            setNewQuestions(prevState => ({
-                ...prevState,
-                [categoryIndex]: ''
-            }));
+            setAddedQuestions(prevState => prevState.filter(q => q.pregunta !== pregunta));
+            console.log('Nuevas Preguntas:', addedQuestions.filter(q => q.pregunta !== pregunta));
         }
     };
 
@@ -64,7 +68,7 @@ function Preguntas() {
                                     {item.preguntas.map((pregunta, idx) => (
                                         <li key={idx} className="text-base font-normal text-gray-500 dark:text-gray-400">
                                             {pregunta}
-                                            {!originalQuestions[jsonRecibido.findIndex(i => i.id === item.id)].includes(pregunta) && (
+                                            {addedQuestions.some(q => q.pregunta === pregunta && q.id === item.id) && (
                                                 <button
                                                     onClick={() => handleDeleteQuestion(item.id, pregunta)}
                                                     className="ml-2 text-red-500"
