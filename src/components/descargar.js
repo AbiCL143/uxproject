@@ -4,7 +4,7 @@ import "jspdf-autotable";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDownload } from "@fortawesome/free-solid-svg-icons";
 
-const RúbricaPDF = ({ data }) => {
+const RubricaPDF = ({ data }) => {
   const generarPDF = () => {
     const doc = new jsPDF("landscape");
 
@@ -45,17 +45,19 @@ const RúbricaPDF = ({ data }) => {
       categoria.criterios.forEach((criterio) => {
         const nombreCriterio = criterio.criterio;
 
-        // Si hay preguntas, generamos una fila por cada pregunta
+        // Si hay preguntas, generamos filas de acuerdo al criterio
         if (!criterio.preguntas || !Array.isArray(criterio.preguntas)) {
           console.warn(`El criterio ${nombreCriterio} no tiene preguntas definidas`);
           return; // Salir si no hay preguntas
         }
 
-        criterio.preguntas.forEach((pregunta, index) => {
+        if (nombreCriterio.toLowerCase() === "interfaz de usuario") {
+          // Concatenar todas las preguntas de "Interfaz de Usuario" en una sola fila
+          const preguntasConcatenadas = criterio.preguntas.join("\n");
           datos.push({
             categoria: isFirstCriterio ? categoria.categoria : "",
-            criterio: index === 0 ? nombreCriterio : "",
-            descripcion: pregunta,
+            criterio: nombreCriterio,
+            descripcion: preguntasConcatenadas, // Todas las preguntas en una sola celda
             cal1: criterio.evaluacion === 1 ? "X" : "",
             cal2: criterio.evaluacion === 2 ? "X" : "",
             cal3: criterio.evaluacion === 3 ? "X" : "",
@@ -63,7 +65,21 @@ const RúbricaPDF = ({ data }) => {
             cal5: criterio.evaluacion === 5 ? "X" : "",
             puntaje: criterio.evaluacion || "" // Agregar el puntaje aquí
           });
-        });
+        } else {
+          // Para otros criterios, concatenar todas las preguntas en una misma fila con saltos de línea
+          const preguntasConcatenadas = criterio.preguntas.join("\n");
+          datos.push({
+            categoria: isFirstCriterio ? categoria.categoria : "",
+            criterio: nombreCriterio,
+            descripcion: preguntasConcatenadas,
+            cal1: criterio.evaluacion === 1 ? "X" : "",
+            cal2: criterio.evaluacion === 2 ? "X" : "",
+            cal3: criterio.evaluacion === 3 ? "X" : "",
+            cal4: criterio.evaluacion === 4 ? "X" : "",
+            cal5: criterio.evaluacion === 5 ? "X" : "",
+            puntaje: criterio.evaluacion || "" // Agregar el puntaje aquí
+          });
+        }
 
         isFirstCriterio = false;
       });
@@ -77,16 +93,20 @@ const RúbricaPDF = ({ data }) => {
       styles: {
         cellWidth: "wrap",
         overflow: "linebreak",
-        halign: "left",
-        valign: "middle",
+        valign: "middle", // Alinear verticalmente al centro
         lineColor: [0, 0, 0],
         lineWidth: 0.1,
       },
       columnStyles: {
-        descripcion: { cellWidth: 50 },
-        criterio: { cellWidth: 40 },
-        categoria: { cellWidth: 40 },
-        puntaje: { cellWidth: 20 }, // Estilo para columna de puntaje
+        descripcion: { cellWidth: 50, halign: "left" }, // Alinear a la izquierda
+        criterio: { cellWidth: 40, halign: "left" },    // Alinear a la izquierda
+        categoria: { cellWidth: 40, halign: "left" },   // Alinear a la izquierda
+        cal1: { cellWidth: 20, halign: "center" },      // Centrar "X"
+        cal2: { cellWidth: 20, halign: "center" },
+        cal3: { cellWidth: 20, halign: "center" },
+        cal4: { cellWidth: 20, halign: "center" },
+        cal5: { cellWidth: 20, halign: "center" },
+        puntaje: { cellWidth: 20, halign: "center" }    // Alinear puntaje al centro
       },
       theme: "grid",
       margin: { top: 20, bottom: 10 },
@@ -110,4 +130,4 @@ const RúbricaPDF = ({ data }) => {
   );
 };
 
-export default RúbricaPDF;
+export default RubricaPDF;
