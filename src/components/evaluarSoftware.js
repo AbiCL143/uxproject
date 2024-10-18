@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import NavBarLog from '../components/NavBarLog';
 import RúbricaPDF from '../components/descargar';
@@ -10,17 +10,15 @@ function EvaluarSoftware() {
     const [evaluaciones, setEvaluaciones] = useState({});
     const [mostrarPDF, setMostrarPDF] = useState(false);
     const [categoriasArray, setCategoriasArray] = useState([]);
-    const [jsonEvaluaciones, setJsonEvaluaciones] = useState([]); // Estado para almacenar el JSON actualizado
+    const [jsonEvaluaciones, setJsonEvaluaciones] = useState([]);
 
     const handleChange = (criterio, value) => {
-        // Actualizar evaluaciones
         const updatedEvaluaciones = {
             ...evaluaciones,
             [criterio]: value,
         };
         setEvaluaciones(updatedEvaluaciones);
 
-        // Agrupar criterios bajo sus categorías para crear el JSON actualizado
         const categoriasAgrupadas = {};
 
         jsonRecibido.forEach((item) => {
@@ -40,17 +38,38 @@ function EvaluarSoftware() {
         });
 
         const nuevoJsonEvaluaciones = Object.values(categoriasAgrupadas);
-        setJsonEvaluaciones(nuevoJsonEvaluaciones); // Actualizar el estado con el nuevo JSON
-
-        // Mostrar el JSON actualizado en la consola
+        setJsonEvaluaciones(nuevoJsonEvaluaciones);
+        
         console.log("JSON actualizado:", JSON.stringify(nuevoJsonEvaluaciones, null, 2));
 
-        // Si todas las evaluaciones están completas, mostrar el PDF
         if (jsonRecibido.every(item => updatedEvaluaciones[item.criterio] !== undefined)) {
             setCategoriasArray(nuevoJsonEvaluaciones);
             setMostrarPDF(true);
         }
     };
+
+    // Calcular el puntaje total
+    const calcularPuntajeTotal = () => {
+        return Object.values(evaluaciones).reduce((total, puntaje) => total + (puntaje || 0), 0);
+    };
+
+    // Calcular el puntaje máximo
+    const puntajeMaximo = jsonRecibido.length * 5; // Asumiendo que cada criterio puede recibir un puntaje de 1 a 5
+
+    // Evaluar el estado basado en el puntaje total
+    const evaluarEstado = (puntajeTotal) => {
+        const porcentaje = (puntajeTotal / puntajeMaximo) * 100;
+        if (porcentaje >= 80) {
+            return 'Excelente';
+        } else if (porcentaje >= 50) {
+            return 'Bueno';
+        } else {
+            return 'Malo';
+        }
+    };
+
+    // Calcular el puntaje total antes de usarlo en el JSX
+    const puntajeTotal = calcularPuntajeTotal();
 
     return (
         <div className="h-screen overflow-hidden relative"
@@ -78,7 +97,7 @@ function EvaluarSoftware() {
                                                 value={value}
                                                 onChange={() => handleChange(item.criterio, value)}
                                                 required
-                                                className="hidden" // Ocultar el input para usar solo las estrellas
+                                                className="hidden"
                                             />
                                             <span className={`text-2xl ${evaluaciones[item.criterio] >= value ? 'text-yellow-400' : 'text-gray-400 opacity-50'}`}>
                                                 {'⭐'}
@@ -89,6 +108,13 @@ function EvaluarSoftware() {
                             </div>
                         ))}
                     </form>
+
+                    {/* Mostrar el puntaje acumulado y evaluación */}
+                    <div className="mt-6">
+                        <h3 className="text-lg font-semibold text-gray-200">
+                            Puntaje: {puntajeTotal} de {puntajeMaximo} - {evaluarEstado(puntajeTotal)}
+                        </h3>
+                    </div>
 
                     {/* Mostrar el componente PDF si se ha generado el PDF */}
                     {mostrarPDF && (

@@ -26,6 +26,9 @@ const RubricaPDF = ({ data }) => {
     ];
 
     const datos = [];
+    let puntajeTotal = 0; // Variable para acumular el puntaje total
+    let criterios_seleccionados = 0;
+    let puntaje_Final = 0;
 
     // Validar si data.categorias existe y es un arreglo
     if (!Array.isArray(data.categorias)) {
@@ -51,39 +54,44 @@ const RubricaPDF = ({ data }) => {
           return; // Salir si no hay preguntas
         }
 
-        if (nombreCriterio.toLowerCase() === "interfaz de usuario") {
-          // Concatenar todas las preguntas de "Interfaz de Usuario" en una sola fila
-          const preguntasConcatenadas = criterio.preguntas.join("\n");
-          datos.push({
-            categoria: isFirstCriterio ? categoria.categoria : "",
-            criterio: nombreCriterio,
-            descripcion: preguntasConcatenadas, // Todas las preguntas en una sola celda
-            cal1: criterio.evaluacion === 1 ? "X" : "",
-            cal2: criterio.evaluacion === 2 ? "X" : "",
-            cal3: criterio.evaluacion === 3 ? "X" : "",
-            cal4: criterio.evaluacion === 4 ? "X" : "",
-            cal5: criterio.evaluacion === 5 ? "X" : "",
-            puntaje: criterio.evaluacion || "" // Agregar el puntaje aquí
-          });
-        } else {
-          // Para otros criterios, concatenar todas las preguntas en una misma fila con saltos de línea
-          const preguntasConcatenadas = criterio.preguntas.join("\n");
-          datos.push({
-            categoria: isFirstCriterio ? categoria.categoria : "",
-            criterio: nombreCriterio,
-            descripcion: preguntasConcatenadas,
-            cal1: criterio.evaluacion === 1 ? "X" : "",
-            cal2: criterio.evaluacion === 2 ? "X" : "",
-            cal3: criterio.evaluacion === 3 ? "X" : "",
-            cal4: criterio.evaluacion === 4 ? "X" : "",
-            cal5: criterio.evaluacion === 5 ? "X" : "",
-            puntaje: criterio.evaluacion || "" // Agregar el puntaje aquí
-          });
+        // Acumular puntaje
+        if (criterio.evaluacion) { // Solo contar si hay una evaluación
+          puntajeTotal += criterio.evaluacion; // Sumar el puntaje de la evaluación
+          criterios_seleccionados++; // Incrementar el contador de criterios seleccionados
         }
+
+        const preguntasConcatenadas = criterio.preguntas.join("\n");
+        datos.push({
+          categoria: isFirstCriterio ? categoria.categoria : "",
+          criterio: nombreCriterio,
+          descripcion: preguntasConcatenadas,
+          cal1: criterio.evaluacion === 1 ? "X" : "",
+          cal2: criterio.evaluacion === 2 ? "X" : "",
+          cal3: criterio.evaluacion === 3 ? "X" : "",
+          cal4: criterio.evaluacion === 4 ? "X" : "",
+          cal5: criterio.evaluacion === 5 ? "X" : "",
+          puntaje: criterio.evaluacion || "" // Agregar el puntaje aquí
+        });
 
         isFirstCriterio = false;
       });
     });
+
+    puntaje_Final = (puntajeTotal * 100) / (5 * criterios_seleccionados);
+
+    // Determinar la calidad del software
+    let calidadSoftware = "";
+    if (puntaje_Final <= 25) {
+      calidadSoftware = "El software es demasiado malo";
+    } else if (puntaje_Final <= 50) {
+      calidadSoftware = "El software es malo";
+    } else if (puntaje_Final >= 80) {
+      calidadSoftware = "El software es bueno";
+    } else if (puntaje_Final >= 60) {
+      calidadSoftware = "El software es pasable";
+    } else if (puntaje_Final === 100) {
+      calidadSoftware = "El software es excelente";
+    }
 
     // Generar la tabla
     doc.autoTable({
@@ -112,6 +120,13 @@ const RubricaPDF = ({ data }) => {
       margin: { top: 20, bottom: 10 },
       pageBreak: "auto",
     });
+
+    // Agregar el puntaje total y la calidad del software al final del PDF
+    doc.setFontSize(14);
+    doc.text(`Puntaje Total: ${puntajeTotal}`, 14, doc.autoTable.previous.finalY + 10);
+    doc.text(`Total de criterios: ${criterios_seleccionados}`, 14, doc.autoTable.previous.finalY + 20);
+    doc.text(`Promedio Final: ${puntaje_Final}%`, 14, doc.autoTable.previous.finalY + 30);
+    doc.text(calidadSoftware, 14, doc.autoTable.previous.finalY + 40); // Agregar la calidad del software
 
     doc.save("rubrica_evaluada.pdf");
   };
