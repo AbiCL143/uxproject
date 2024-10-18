@@ -72,11 +72,12 @@ function NewSelectCriterion() {
             }
         });
     };
-
+    
     const handleNext = () => {
         const jsonToSend = seleccionados.map((item) => ({
             categoria: item.categoria,
             criterio: item.criterio.nombre_criterio,
+            id: item.criterio.ID_criterio,
             preguntas: item.criterio.preguntas.map(pregunta => pregunta.pregunta)
         }));
 
