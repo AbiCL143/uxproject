@@ -21,7 +21,7 @@ import NewSelectCriterion from './pages/newSelectCriterion';
 import SeleccionarCards from './pages/pruebas/seleccionarCards';
 import MostrarCriterios from './pages/pruebas/mostrarCriterios';
 import Preguntas from './pages/preguntas';
-
+import MoverCriterios from './pages/moverCriterios';
 
 function App() {
   return (
@@ -41,6 +41,7 @@ function App() {
       <Route path='/newSelectCriterion' element={<NewSelectCriterion/>}/>
       <Route path='/evaluarSoftware' element={<EvaluarSoftware/>}/>
       <Route path='/preguntas' element={<Preguntas/>}/>
+      <Route path='/moverCriterios' element={<MoverCriterios/>}/>
 
       {/* pruebas de back */}
       <Route path='/selectCards' element={<SeleccionarCards/>}/>

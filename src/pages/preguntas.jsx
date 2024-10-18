@@ -45,6 +45,10 @@ function Preguntas() {
         }
     };
 
+    const handleNext = () => {
+        navigate('/moverCriterios', { state: { jsonRecibido, addedQuestions } });
+    };
+
     // Agrupar criterios por categoría
     const groupedByCategory = jsonRecibido.reduce((acc, item) => {
         if (!acc[item.categoria]) {
@@ -101,6 +105,12 @@ function Preguntas() {
             ) : (
                 <p>No hay preguntas para mostrar.</p>
             )}
+            <button
+                onClick={handleNext}
+                className="bg-green-500 text-white px-4 py-2 rounded mt-4"
+            >
+                Siguiente
+            </button>
         </div>
     );
 }
