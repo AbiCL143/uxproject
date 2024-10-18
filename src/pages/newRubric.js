@@ -17,7 +17,7 @@ function NewRubric() {
     { id: 1, label: 'Usabilidad' },
     { id: 2, label: 'Accesibilidad' },
     { id: 3, label: 'Simplicidad' },
-    { id: 4, label: 'Constancia' },
+    { id: 4, label: 'Consistencia' },
     { id: 5, label: 'Centrado en el Usuario' }
   ];
 
