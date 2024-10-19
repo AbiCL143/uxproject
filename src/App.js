@@ -22,6 +22,7 @@ import SeleccionarCards from './pages/pruebas/seleccionarCards';
 import MostrarCriterios from './pages/pruebas/mostrarCriterios';
 import Preguntas from './pages/preguntas';
 import MoverCriterios from './pages/moverCriterios';
+import Perfil from './pages/perfil';
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
       <Route path='/evaluarSoftware' element={<EvaluarSoftware/>}/>
       <Route path='/preguntas' element={<Preguntas/>}/>
       <Route path='/moverCriterios' element={<MoverCriterios/>}/>
+      <Route path='/perfil' element={<Perfil/>}/>
 
       {/* pruebas de back */}
       <Route path='/selectCards' element={<SeleccionarCards/>}/>

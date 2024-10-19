@@ -29,7 +29,9 @@ const NavBarLog = () => {
 
                 <div className="ml-auto">
                     <div className="flex items-center justify-center w-12 h-12 rounded-full border border-white">
+                        <Link to="/perfil">
                         <FontAwesomeIcon icon={faUser} size="2x" style={{ color: "#ffffff" }} />
+                        </Link>
                     </div>
                 </div>
             </div>
