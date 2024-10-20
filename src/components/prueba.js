@@ -114,6 +114,8 @@ const RubricaPDF = ({ data, nombre_rubrica = "Rúbrica Evaluada", nombre_proyect
 
         // Agregar resumen al PDF
         doc.setFontSize(14);
+        doc.text("RESUMEN", 14, 20);
+        doc.text(`Puntaje Total: ${puntajeTotal}`, 14, doc.autoTable.previous.finalY + 10);
         doc.text(`Total de criterios: ${criterios_seleccionados}`, 14, doc.autoTable.previous.finalY + 20);
         doc.text(`Promedio Final: ${puntaje_Final}%`, 14, doc.autoTable.previous.finalY + 30);
         doc.text(calidadSoftware, 14, doc.autoTable.previous.finalY + 40);
