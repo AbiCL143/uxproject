@@ -14,7 +14,7 @@ function EvaluarSoftware() {
     const [categoriasArray, setCategoriasArray] = useState([]);
     const [jsonEvaluaciones, setJsonEvaluaciones] = useState([]);
     const [nombreProyecto, setNombreProyecto] = useState('');
-
+    console.log('JSON Recibido:', jsonRecibido);
     const handleChange = (criterio, value) => {
         const updatedEvaluaciones = {
             ...evaluaciones,
