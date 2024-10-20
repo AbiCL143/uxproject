@@ -1,5 +1,6 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useNavigate } from "react-router-dom";
 import {
   faPlus,
   faSquareCheck,
@@ -12,6 +13,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 const  Card = ({ title, link, icono, className, nombre, ID }) => {
+  const navigate = useNavigate();
   const getIcon = (title) => {
     switch (icono) {
       case "nueva":
@@ -38,7 +40,7 @@ const  Card = ({ title, link, icono, className, nombre, ID }) => {
   const Rubrica = async () => {
     console.log("ID de la rúbrica:", ID);
     try{
-      const response =  await fetch(`http://localhost:8000/rubricas/preguntas_usuario/${ID}`,
+      const response =  await fetch(`http://localhost:8000/rubricas/evaluacion_usuario/${ID}`,
         {
           method: "GET",
           headers: {
@@ -49,6 +51,8 @@ const  Card = ({ title, link, icono, className, nombre, ID }) => {
       const data = await response.json();
       if(response.ok){
         console.log("Rúbrica evaluada", data);
+        navigate('/evaluarSoftware', {state: { jsonToSend: data } });
+
       }
       else{
         console.log("Error al retornar la rubrica", data);
