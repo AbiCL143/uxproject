@@ -46,7 +46,7 @@ function Rubricas() {
                     <Card title='Agregar Nueva' icono='nueva' className='border-dashed border-2 border-white' link="/nuevaRubrica" />
                     {/* Usar map para crear las tarjetas dinámicamente */}
                     {cardsData.map((card, index) => (
-                        <Card key={index} title={card.nombre_rubrica} icono={card.icon} />
+                        <Card key={index} ID={card.ID_rubrica} title={card.nombre_rubrica} icono={card.icon} nombre={"Evaluar"} />
                     ))}
                 </div>
             </div>
