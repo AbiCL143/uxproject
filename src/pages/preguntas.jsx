@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 function Preguntas() {
@@ -6,11 +6,21 @@ function Preguntas() {
     const navigate = useNavigate();
     const jsonRecibido = location.state?.jsonToSend || [];
     const nombre = location.state?.nombre || '';
+
     console.log('JSON Recibido:', jsonRecibido);
     console.log('Nombre:', nombre);
+
     const [newQuestions, setNewQuestions] = useState({});
-    const [originalQuestions, setOriginalQuestions] = useState(jsonRecibido.map(item => item.preguntas.slice()));
-    const [addedQuestions, setAddedQuestions] = useState([]); // Estado para almacenar las nuevas preguntas
+    const [originalQuestions] = useState(jsonRecibido.map(item => item.preguntas.slice()));
+    const [selectedQuestions, setSelectedQuestions] = useState([]);
+
+    useEffect(() => {
+        // Inicializar las preguntas seleccionadas con las que ya están en el JSON recibido
+        const inicialPreguntasSeleccionadas = jsonRecibido.flatMap(item =>
+            item.preguntas.map(pregunta => ({ id: item.id, pregunta }))
+        );
+        setSelectedQuestions(inicialPreguntasSeleccionadas);
+    }, [jsonRecibido]);
 
     const handleInputChange = (e, id) => {
         const { value } = e.target;
@@ -24,31 +34,39 @@ function Preguntas() {
         const itemIndex = jsonRecibido.findIndex(item => item.id === id);
         if (newQuestions[id]) {
             jsonRecibido[itemIndex].preguntas.push(newQuestions[id]);
-            setAddedQuestions(prevState => [
+            setSelectedQuestions(prevState => [
                 ...prevState,
-                { id, pregunta: newQuestions[id] }
+                { id, pregunta: newQuestions[id] } // Agregar la nueva pregunta como seleccionada automáticamente
             ]);
             setNewQuestions(prevState => ({
                 ...prevState,
                 [id]: ''
             }));
-            console.log('Nuevas Preguntas:', [...addedQuestions, { id, pregunta: newQuestions[id] }]);
+            console.log('Nuevas Preguntas:', selectedQuestions);
         }
     };
 
-    const handleDeleteQuestion = (categoryIndex, pregunta) => {
-        const itemIndex = jsonRecibido.findIndex(item => item.id === categoryIndex);
-        const isOriginal = originalQuestions[itemIndex].includes(pregunta);
-        if (!isOriginal) {
-            jsonRecibido[itemIndex].preguntas = jsonRecibido[itemIndex].preguntas.filter(q => q !== pregunta);
-            setAddedQuestions(prevState => prevState.filter(q => q.pregunta !== pregunta));
-            console.log('Nuevas Preguntas:', addedQuestions.filter(q => q.pregunta !== pregunta));
+    const handleSelectQuestion = (pregunta, itemId) => {
+        const isSelected = selectedQuestions.some(q => q.pregunta === pregunta && q.id === itemId);
+        
+        if (isSelected) {
+            // Deseleccionar la pregunta, pero no eliminarla del JSON
+            setSelectedQuestions(prevState => prevState.filter(q => q.pregunta !== pregunta || q.id !== itemId));
+        } else {
+            // Seleccionar la pregunta
+            setSelectedQuestions(prevState => [...prevState, { pregunta, id: itemId }]);
         }
     };
 
     const handleNext = () => {
-        console.log('Datos a enviar:', jsonRecibido); // Verificar el contenido de jsonRecibido
-        navigate('/resumen_de_rubrica', { state: { jsonToSend: jsonRecibido, nombre } });
+        // Filtrar solo las preguntas seleccionadas para el envío
+        const jsonToSend = jsonRecibido.map(item => ({
+            ...item,
+            preguntas: selectedQuestions.filter(q => q.id === item.id).map(q => q.pregunta)
+        }));
+
+        console.log('Datos a enviar:', jsonToSend); // Verificar el contenido de jsonToSend
+        navigate('/resumen_de_rubrica', { state: { jsonToSend, nombre } });
     };
 
     // Agrupar criterios por categoría
@@ -72,16 +90,17 @@ function Preguntas() {
                                 <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">{item.criterio}</h3>
                                 <ul className="list-disc list-inside mt-2">
                                     {item.preguntas.map((pregunta, idx) => (
-                                        <li key={idx} className="text-base font-normal text-gray-500 dark:text-gray-400">
+                                        <li 
+                                            key={idx} 
+                                            className={`text-base font-normal text-gray-500 dark:text-gray-400 ${selectedQuestions.some(q => q.pregunta === pregunta && q.id === item.id) ? 'bg-gray-200' : ''}`}
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedQuestions.some(q => q.pregunta === pregunta && q.id === item.id)}
+                                                onChange={() => handleSelectQuestion(pregunta, item.id)}
+                                                className="mr-2"
+                                            />
                                             {pregunta}
-                                            {addedQuestions.some(q => q.pregunta === pregunta && q.id === item.id) && (
-                                                <button
-                                                    onClick={() => handleDeleteQuestion(item.id, pregunta)}
-                                                    className="ml-2 text-red-500"
-                                                >
-                                                    Eliminar
-                                                </button>
-                                            )}
                                         </li>
                                     ))}
                                 </ul>
