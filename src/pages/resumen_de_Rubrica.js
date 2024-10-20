@@ -1,14 +1,51 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import NavBarLog from '../components/NavBarLog';
 import RúbricaPDF from '../components/descargar';
 import fondo from '../assets/fondo.jpg';
+import BotonRegistrar from '../components/registrar_rubrica';
 
 function Resumen_de_Rubrica() {
     const location = useLocation();
     const navigate = useNavigate();
     const jsonRecibido = location.state?.jsonToSend || [];
+    const nombreProyecto = location.state?.nombre || '';
+    console.log('Nombre del proyecto:',     );
     console.log('JSON Recibido:', jsonRecibido);
+    const [rubricaData, setRubricaData] = useState(null);
+    const [preguntasData, setPreguntasData] = useState([]);
+
+    useEffect(() => {
+        // Transformar el objeto recibido en el formato requerido
+        const categorias = [...new Set(jsonRecibido.map(item => item.id_categoria))];
+        const criterios = jsonRecibido.map(item => item.id);
+        const preguntas = jsonRecibido.flatMap(item => 
+            item.preguntas.map(pregunta => ({
+                id_criterio: item.id,
+                pregunta: pregunta // Asegurarse de que el campo `pregunta` esté presente
+            }))
+        );
+
+        const rubricaTransformada = {
+            nombre_rubrica: nombreProyecto,
+            categorias,
+            criterios
+        };
+
+        setRubricaData(rubricaTransformada);
+        setPreguntasData(preguntas);
+
+        console.log('Rúbrica Transformada:', rubricaTransformada);
+        console.log('Preguntas:', preguntas);
+    }, [jsonRecibido, nombreProyecto]);
+    const handleSuccess = () => {
+        navigate('/home'); // Redirigir a una ruta de éxito o mostrar un mensaje de éxito
+    };
+
+    const handleError = (error) => {
+        // Manejar el error, mostrar un mensaje de error al usuario
+        console.error('Error al registrar la rúbrica y las preguntas:', error);
+    };
 
     const [openIndex, setOpenIndex] = useState(null);
 
@@ -35,6 +72,11 @@ function Resumen_de_Rubrica() {
 
     const categoriasArray = Object.values(categoriasAgrupadas);
 
+    const enviarDatos = () => {
+        console.log('Datos a enviar:', jsonRecibido);
+        navigate('/registrar_rubrica', { state: { rubrica: jsonRecibido, nombreProyecto } });
+    }
+
     return (
         <div className="h-screen overflow-hidden relative"
             style={{ backgroundImage: `url(${fondo})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
@@ -45,7 +87,22 @@ function Resumen_de_Rubrica() {
                     <div className="text-4xl font-bold text-left bg-gradient-to-r text-white from-1% to-Degradado2 bg-clip-text text-transparent p-6">
                         Resumen de la rúbrica
                     </div>
-                    <RúbricaPDF data={{ nombre_rubrica: "Nombre de tu Rúbrica", categorias: categoriasArray }} />
+                    <div className='flex flex-auto items-center space-x-4'>
+                    <RúbricaPDF nombre_proyecto = {nombreProyecto} data={{ nombre_rubrica: nombreProyecto, categorias: categoriasArray }} />
+                    <BotonRegistrar 
+                        rubricaData={rubricaData}
+                        preguntasData={preguntasData}
+                        onSuccess={handleSuccess}
+                        onError={handleError}
+                    />
+                    {/* Botón para evaluar el software */}
+                    <button 
+                        className="mb-2 bg-green-500 text-white py-2 px-4 rounded"
+                        onClick={() => navigate('/evaluarSoftware', { state: { jsonToSend: jsonRecibido } })}
+                    >
+                        Evaluar
+                    </button>
+                    </div>
                     <div id="accordion-collapse" data-accordion="collapse">
                         {categoriasArray.map((categoria, index) => (
                             <div key={index} className="mb-4">
@@ -89,13 +146,7 @@ function Resumen_de_Rubrica() {
                             </div>
                         ))}
                     </div>
-                    {/* Botón para evaluar el software */}
-                    <button 
-                        className="mt-4 bg-green-500 text-white py-2 px-4 rounded"
-                        onClick={() => navigate('/evaluarSoftware', { state: { jsonToSend: jsonRecibido } })}
-                    >
-                        Evaluar
-                    </button>
+                    
                 </div>
             </div>
         </div>

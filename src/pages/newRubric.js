@@ -8,10 +8,13 @@ import simplicidad from '../assets/simplicidad.jpg';
 import usabilidad from '../assets/usabilidad.jpg';
 import { useNavigate } from "react-router-dom";
 import fondo from '../assets/fondo.jpg';
+import { useLocation } from "react-router-dom";
 
 
 function NewRubric() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const nombre = location.state?.nombre || [];
   const [selectedChecklists, setSelectedChecklists] = useState([]);
   const checklists = [
     { id: 1, label: 'Usabilidad' },
@@ -20,7 +23,7 @@ function NewRubric() {
     { id: 4, label: 'Consistencia' },
     { id: 5, label: 'Centrado en el Usuario' }
   ];
-
+  console.log(nombre);
   const handleCheckboxChange = (checklist) => {
     setSelectedChecklists(prevState => {
       const isSelected = prevState.some(item => item.id === checklist.id);
@@ -36,7 +39,7 @@ function NewRubric() {
     });
   };
   const handleNavigate = () => {
-    navigate('/newSelectCriterion', { state: { selectedChecklists } });
+    navigate('/newSelectCriterion', { state: { selectedChecklists, nombre } });
   };
 
   return (

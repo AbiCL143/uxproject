@@ -7,9 +7,10 @@ function NewSelectCriterion() {
     const location = useLocation();
     const navigate = useNavigate();
     const { selectedChecklists } = location.state || { selectedChecklists: [] };
+    const nombre = location.state?.nombre || '';
     const [criterios, setCriterios] = useState([]);
     const [seleccionados, setSeleccionados] = useState([]);
-
+    console.log(nombre);
     useEffect(() => {
         const fetchCriterios = async () => {
             if (selectedChecklists.length > 0) {
@@ -40,7 +41,8 @@ function NewSelectCriterion() {
                                     return { ...criterio, preguntas: [] };
                                 }
                             }));
-                            return { categoria: checklist.label, criterios: criteriosWithPreguntas };
+                            console.log('Criterios con preguntas:', criteriosWithPreguntas);
+                            return { categoria: checklist.label, id_categoria: checklist.id, criterios: criteriosWithPreguntas };
                         } else {
                             return null;
                         }
@@ -58,7 +60,7 @@ function NewSelectCriterion() {
         fetchCriterios();
     }, [selectedChecklists]);
 
-    const handleCheckboxChange = (categoria, criterio) => {
+    const handleCheckboxChange = (categoria, criterio, id_categoria) => {
         setSeleccionados((prevSeleccionados) => {
             const exists = prevSeleccionados.some(
                 (item) => item.categoria === categoria && item.criterio.ID_criterio === criterio.ID_criterio
@@ -68,20 +70,21 @@ function NewSelectCriterion() {
                     (item) => !(item.categoria === categoria && item.criterio.ID_criterio === criterio.ID_criterio)
                 );
             } else {
-                return [...prevSeleccionados, { categoria, criterio }];
+                return [...prevSeleccionados, { categoria, criterio, id_categoria }];
             }
         });
     };
     
     const handleNext = () => {
         const jsonToSend = seleccionados.map((item) => ({
+            id_categoria: item.id_categoria, // Incluir id_categoria
             categoria: item.categoria,
             criterio: item.criterio.nombre_criterio,
             id: item.criterio.ID_criterio,
             preguntas: item.criterio.preguntas.map(pregunta => pregunta.pregunta)
         }));
 
-        navigate('/preguntas', { state: { jsonToSend } });
+        navigate('/preguntas', { state: { jsonToSend, nombre } });
     };
 
     return (
@@ -116,7 +119,7 @@ function NewSelectCriterion() {
                                                             item.criterio.ID_criterio === criterio.ID_criterio
                                                     )}
                                                     onChange={() =>
-                                                        handleCheckboxChange(categoriaData.categoria, criterio)
+                                                        handleCheckboxChange(categoriaData.categoria, criterio, categoriaData.id_categoria)
                                                     }
                                                 />
                                             </div>

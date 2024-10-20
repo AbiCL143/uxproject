@@ -19,7 +19,7 @@ function HomePage() {
             <Card 
               title="Nueva Rúbrica" 
               icono="nueva" 
-              link="/newRubric"
+              link="/nombreRubrica"
               className="bg-transparent backdrop-blur-sm shadow-lg text-white w-80 h-80 p-8" 
             />
             <Card 

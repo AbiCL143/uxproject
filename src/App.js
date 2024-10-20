@@ -23,6 +23,8 @@ import MostrarCriterios from './pages/pruebas/mostrarCriterios';
 import Preguntas from './pages/preguntas';
 import MoverCriterios from './pages/moverCriterios';
 import Perfil from './pages/perfil';
+import Registrar from './pages/registrar';
+import NombreRubrica from './pages/nombreRubrica';
 
 function App() {
   return (
@@ -44,6 +46,8 @@ function App() {
       <Route path='/preguntas' element={<Preguntas/>}/>
       <Route path='/moverCriterios' element={<MoverCriterios/>}/>
       <Route path='/perfil' element={<Perfil/>}/>
+      <Route path='/registrar_rubrica' element={<Registrar/>}/>
+      <Route path='/nombreRubrica' element={<NombreRubrica/>}/>
 
       {/* pruebas de back */}
       <Route path='/selectCards' element={<SeleccionarCards/>}/>

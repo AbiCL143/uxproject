@@ -5,8 +5,9 @@ function Preguntas() {
     const location = useLocation();
     const navigate = useNavigate();
     const jsonRecibido = location.state?.jsonToSend || [];
+    const nombre = location.state?.nombre || '';
     console.log('JSON Recibido:', jsonRecibido);
-
+    console.log('Nombre:', nombre);
     const [newQuestions, setNewQuestions] = useState({});
     const [originalQuestions, setOriginalQuestions] = useState(jsonRecibido.map(item => item.preguntas.slice()));
     const [addedQuestions, setAddedQuestions] = useState([]); // Estado para almacenar las nuevas preguntas
@@ -46,7 +47,8 @@ function Preguntas() {
     };
 
     const handleNext = () => {
-        navigate('/moverCriterios', { state: { jsonRecibido, addedQuestions } });
+        console.log('Datos a enviar:', jsonRecibido); // Verificar el contenido de jsonRecibido
+        navigate('/resumen_de_rubrica', { state: { jsonToSend: jsonRecibido, nombre } });
     };
 
     // Agrupar criterios por categoría
