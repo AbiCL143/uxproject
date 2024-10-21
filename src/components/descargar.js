@@ -1,38 +1,33 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState } from "react";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDownload } from "@fortawesome/free-solid-svg-icons";
-import Chart from "chart.js/auto";
-import html2canvas from "html2canvas";
 
-const RubricaPDF = ({ data, nombre_rubrica = "Rúbrica Evaluada", nombre_proyecto }) => {
-    const chartRef = useRef(null);
-    const chartInstanceRef = useRef(null);
-
+const RubricaPDF = ({ data, nombre_rubrica = "Rúbrica Evaluada", nombre_proyecto, imagen_grafica }) => {
     const [criterios, setCriterios] = useState([]);
     const [puntajes, setPuntajes] = useState([]);
-    const [chartReady, setChartReady] = useState(false);
 
-    const generarPDF = async () => {
+    const generarPDF = () => {
         const doc = new jsPDF("landscape");
 
-        const margin = 2; // Margen más delgado de 2 unidades
+        const margin = 10; // margen más delgado
         const pageWidth = doc.internal.pageSize.getWidth();
         const pageHeight = doc.internal.pageSize.getHeight();
-        // Dibujar el margen negro
-        doc.setFillColor(0, 0, 0);
-        doc.rect(0, 0, pageWidth, pageHeight, "F");
-        doc.setFillColor(255, 255, 255);
-        doc.rect(margin, margin, pageWidth - margin * 2, pageHeight - margin * 2, "F");
 
         // Establecer el color de texto y márgenes internos
         doc.setTextColor(0, 0, 0);
         doc.setFont("times", "normal");
         doc.setFontSize(16);
+        doc.setFont("times", "bold"); // Negrita para nombre_rubrica
         doc.text(nombre_rubrica, margin + 10, margin + 10);
+        doc.setFont("times", "normal"); // Restablecer a normal
+        let startY = 30; //Posicion inicial de la tabla
         if (nombre_proyecto) {
+            doc.setFont("times", "bold"); // Negrita para nombre_proyecto
+            startY = 35;
             doc.text(`Nombre del proyecto: ${nombre_proyecto}`, margin + 10, margin + 20);
+            doc.setFont("times", "normal"); // Restablecer a normal
         }
 
         const datos = [];
@@ -47,11 +42,16 @@ const RubricaPDF = ({ data, nombre_rubrica = "Rúbrica Evaluada", nombre_proyect
 
         const tempCriterios = [];
         const tempPuntajes = [];
+        const categoriasUnicas = new Set(); // Usar un Set para categorías únicas
 
         data.categorias.forEach((categoria) => {
             if (!categoria.criterios || !Array.isArray(categoria.criterios)) {
                 return;
             }
+
+            // Solo agregar la categoría una vez
+            const nombreCategoria = categoria.categoria;
+            let primeraFila = true; // Flag para determinar si es la primera fila de la categoría
 
             categoria.criterios.forEach((criterio) => {
                 if (criterio.evaluacion) {
@@ -61,8 +61,9 @@ const RubricaPDF = ({ data, nombre_rubrica = "Rúbrica Evaluada", nombre_proyect
                     tempPuntajes.push(criterio.evaluacion);
                 }
 
+                // Agregar los datos de la fila
                 datos.push({
-                    categoria: categoria.categoria,
+                    categoria: primeraFila ? nombreCategoria : "", // Mostrar nombre de la categoría solo en la primera fila
                     criterio: criterio.criterio,
                     descripcion: criterio.preguntas.join("\n"),
                     cal1: criterio.evaluacion === 1 ? "X" : "",
@@ -72,13 +73,22 @@ const RubricaPDF = ({ data, nombre_rubrica = "Rúbrica Evaluada", nombre_proyect
                     cal5: criterio.evaluacion === 5 ? "X" : "",
                     puntaje: criterio.evaluacion || "",
                 });
+
+                primeraFila = false; // Después de la primera fila, cambiar a false
             });
         });
 
         setCriterios(tempCriterios);
         setPuntajes(tempPuntajes);
 
-        puntaje_Final = (puntajeTotal * 100) / (5 * criterios_seleccionados);
+        // Calcular el promedio final
+        if (criterios_seleccionados > 0) {
+            puntaje_Final = (puntajeTotal * 100) / (5 * criterios_seleccionados);
+        }
+
+        // Redondear a dos decimales
+        puntaje_Final = parseFloat(puntaje_Final.toFixed(2));
+
         // Determinar la calidad del software
         let calidadSoftware = "";
         if (puntaje_Final <= 25) {
@@ -96,106 +106,100 @@ const RubricaPDF = ({ data, nombre_rubrica = "Rúbrica Evaluada", nombre_proyect
         }
 
         // Crear la tabla
-        doc.autoTable({
-            columns: [
-                { header: "Categoría", dataKey: "categoria" },
-                { header: "Criterio", dataKey: "criterio" },
-                { header: "Descripción", dataKey: "descripcion" },
-                { header: "Muy Malo", dataKey: "cal1" },
-                { header: "Malo", dataKey: "cal2" },
-                { header: "Regular", dataKey: "cal3" },
-                { header: "Bueno", dataKey: "cal4" },
-                { header: "Muy Bueno", dataKey: "cal5" },
-                { header: "Puntaje", dataKey: "puntaje" },
-            ],
-            body: datos,
-            startY: 30, // Cambiar este valor para elevar la tabla
-        });
+        let yPos = startY; // inicializar la posición Y
+        const rowHeight = 10; // altura de cada fila
 
-        // Agregar resumen al PDF
-        doc.setFontSize(14);
-        doc.text(`Total de criterios: ${criterios_seleccionados}`, 14, doc.autoTable.previous.finalY + 20);
-        doc.text(`Promedio Final: ${puntaje_Final}%`, 14, doc.autoTable.previous.finalY + 30);
-        doc.text(calidadSoftware, 14, doc.autoTable.previous.finalY + 40);
+        // Función para agregar la tabla
+        const agregarTabla = () => {
+            doc.autoTable({
+                columns: [
+                    { header: "Categoría", dataKey: "categoria" },
+                    { header: "Criterio", dataKey: "criterio" },
+                    { header: "Descripción", dataKey: "descripcion" },
+                    { header: "Muy Malo", dataKey: "cal1" },
+                    { header: "Malo", dataKey: "cal2" },
+                    { header: "Regular", dataKey: "cal3" },
+                    { header: "Bueno", dataKey: "cal4" },
+                    { header: "Muy Bueno", dataKey: "cal5" },
+                    { header: "Puntaje", dataKey: "puntaje" },
+                ],
+                body: datos,
+                startY: yPos, // Cambiar este valor para elevar la tabla
+                margin: { top: 30 }, // Ajustar el margen superior
+            });
 
+            yPos = doc.autoTable.previous.finalY + 20; // Actualizar la posición Y después de la tabla
+        };
 
-        // Agregar nueva página para el gráfico
-        doc.addPage();
+        // Llamar a la función para agregar la tabla
+        agregarTabla();
 
-        doc.setFillColor(0, 0, 0); // Color negro
-        doc.rect(0, 0, pageWidth, pageHeight, "F"); // Llenar toda la página
-        doc.setFillColor(255, 255, 255); // Cambiar a blanco
-        doc.rect(margin, margin, pageWidth - margin * 2, pageHeight - margin * 2, "F"); // Dibujar un rectángulo blanco dentro del margen
+        // Resumen
+        const resumen = [
+            `Total de criterios: ${criterios_seleccionados}`,
+            `Promedio Final: ${puntaje_Final}%`,
+            calidadSoftware,
+        ];
 
-        if (chartReady) {
-            const chartCanvas = chartRef.current;
-            const canvas = await html2canvas(chartCanvas);
-            const imgData = canvas.toDataURL("image/png");
-            const imgWidth = 180;
-            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        const agregarResumen = () => {
+            const lines = doc.splitTextToSize(resumen.join("\n"), pageWidth - margin * 2);
+            let currentY = yPos;
 
-            // Añadir título "GRÁFICA"
+            // Verificar si cabe el resumen en la página
+            if (currentY + (lines.length * rowHeight) > pageHeight - margin * 2) {
+                // Si no cabe, crear una nueva página
+                doc.addPage();
+                currentY = margin + 10; // Reiniciar la posición Y para la nueva página
+            }
+
+            // Agregar texto del resumen
+            doc.setFontSize(16);
+            doc.setFont("times", "bold"); // Negrita para "Resumen del software evaluado:"
+            doc.text("Resumen del software evaluado:", margin + 10, currentY); // Agregar título en negrita
+            doc.setFont("times", "normal"); // Negrita para "Resumen del software evaluado:"
+            currentY += rowHeight; // Espacio después del título
             doc.setFontSize(14);
-            doc.text("GRÁFICA", 14, 20);
+            lines.forEach(line => {
+                doc.text(line, margin + 10, currentY);
+                currentY += rowHeight;
+            });
 
-            // Añadir el gráfico
-            doc.addImage(imgData, "PNG", 14, 30, imgWidth, imgHeight);
+            // Actualizar la posición Y después del resumen
+            yPos = currentY; // Guardamos la nueva posición Y después del resumen
+        };
+
+        // Llamar a la función para agregar el resumen
+        agregarResumen();
+
+        // Agregar la imagen de la gráfica después del resumen
+        if (imagen_grafica) {
+            // Asegúrate de que la imagen se coloque en la nueva posición Y después del resumen
+            if (yPos + 80 > pageHeight - margin * 2) { // Ajusta para el tamaño de la imagen
+                doc.addPage();
+                yPos = margin + 10; // Reiniciar la posición Y para la nueva página
+            }
+            // Agregar título antes del gráfico
+            doc.setFontSize(16);
+            doc.setFont("times", "bold"); // Negrita para "Gráfico general"
+            doc.text("Gráfico general:", margin + 10, yPos + 5);
+            doc.setFont("times", "normal"); // Restablecer a normal
+            yPos += rowHeight + 2; // Espacio después del título
+
+            doc.addImage(imagen_grafica, "PNG", margin + 10, yPos, 150, 70); // Ajusta la posición y el tamaño
         }
 
         doc.save("rubrica_evaluada.pdf");
     };
 
-    useEffect(() => {
-        const chartCanvas = chartRef.current;
-
-        if (chartCanvas && criterios.length > 0 && puntajes.length > 0) {
-            if (chartInstanceRef.current) {
-                chartInstanceRef.current.destroy();
-            }
-
-            const chartInstance = new Chart(chartCanvas, {
-                type: "bar",
-                data: {
-                    labels: criterios,
-                    datasets: [
-                        {
-                            label: "Puntaje",
-                            data: puntajes,
-                            backgroundColor: "rgba(75, 192, 192, 0.6)",
-                            borderColor: "rgba(75, 192, 192, 1)",
-                            borderWidth: 1,
-                        },
-                    ],
-                },
-                options: {
-                    indexAxis: "y",
-                    scales: {
-                        x: {
-                            beginAtZero: true,
-                            max: 5,
-                        },
-                    },
-                },
-            });
-
-            chartInstanceRef.current = chartInstance;
-
-            chartInstance.options.animation.onComplete = () => {
-                setChartReady(true);
-            };
-        }
-    }, [criterios, puntajes]);
-
     return (
         <div>
-            <canvas ref={chartRef} width="80" height="80"></canvas>
             <button
                 type="button"
                 onClick={generarPDF}
-                className="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900 flex items-center"
+                className="focus:outline-none bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded flex items-center"
             >
                 <FontAwesomeIcon icon={faDownload} className="mr-2" />
-                Descargar Rúbrica
+                Descargar PDF
             </button>
         </div>
     );
