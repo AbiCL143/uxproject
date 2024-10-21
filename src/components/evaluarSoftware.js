@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Bar } from 'react-chartjs-2';
 import 'chart.js/auto';
+import html2canvas from 'html2canvas'; // Importar html2canvas
 import NavBarLog from '../components/NavBarLog';
 import RúbricaPDF from '../components/descargar';
 import fondo from '../assets/fondo.jpg';
@@ -14,7 +15,10 @@ function EvaluarSoftware() {
     const [categoriasArray, setCategoriasArray] = useState([]);
     const [jsonEvaluaciones, setJsonEvaluaciones] = useState([]);
     const [nombreProyecto, setNombreProyecto] = useState('');
-    console.log('JSON Recibido:', jsonRecibido);
+    const [imagenGrafica, setImagenGrafica] = useState(null); // Estado para almacenar la imagen de la gráfica
+
+    const graficaRef = useRef(); // Crear referencia para la gráfica
+
     const handleChange = (criterio, value) => {
         const updatedEvaluaciones = {
             ...evaluaciones,
@@ -46,6 +50,16 @@ function EvaluarSoftware() {
 
         if (jsonRecibido.every(item => updatedEvaluaciones[item.criterio] !== undefined)) {
             setMostrarPDF(true);
+            capturarGrafica(); // Capturar la gráfica al mostrar PDF
+        }
+    };
+
+    const capturarGrafica = () => {
+        if (graficaRef.current) {
+            html2canvas(graficaRef.current).then((canvas) => {
+                const imagen = canvas.toDataURL('image/png'); // Convertir el canvas a imagen
+                setImagenGrafica(imagen); // Almacenar la imagen en el estado
+            });
         }
     };
 
@@ -68,9 +82,9 @@ function EvaluarSoftware() {
 
     const puntajeTotal = calcularPuntajeTotal();
 
-    const prepararDatosGrafico = (categoria) => {
-        const criterios = categoria.criterios.map((criterio) => criterio.criterio);
-        const puntajes = categoria.criterios.map((criterio) => criterio.puntaje);
+    const prepararDatosGrafico = () => {
+        const criterios = jsonRecibido.map((item) => item.criterio);
+        const puntajes = criterios.map((criterio) => evaluaciones[criterio] || 0);
 
         return {
             labels: criterios,
@@ -85,7 +99,6 @@ function EvaluarSoftware() {
     };
 
     const handleDownload = () => {
-        // Muestra el nombre del proyecto en la consola
         console.log('Nombre del Proyecto desde Evaluar:', nombreProyecto);
     };
 
@@ -152,23 +165,34 @@ function EvaluarSoftware() {
                             </div>
 
                             {mostrarPDF && (
-                                console.log('Nombre del Proyecto desde Evaluar:', nombreProyecto),
-                                <RúbricaPDF data={{ categorias: categoriasArray }} nombre_rubrica={"Nombre de tu Rúbrica"} nombre_proyecto={nombreProyecto} onDownload={handleDownload} />
+                                <RúbricaPDF
+                                    data={{ categorias: categoriasArray }}
+                                    nombre_rubrica={"Nombre de tu Rúbrica"}
+                                    nombre_proyecto={nombreProyecto}
+                                    imagen_grafica={imagenGrafica} // Pasar la imagen a RúbricaPDF
+                                    onDownload={handleDownload}
+                                />
                             )}
                         </div>
 
                         <div className="w-2/5 ml-20">
-                            {categoriasArray.map((categoria, index) => (
-                                <div key={index} className="mb-3 p-2" style={{ backgroundColor: 'rgba(255, 255, 255, 0.7)', borderRadius: '8px' }}>
-                                    <h3 className="text-lg font-bold text-blue-700">{categoria.categoria}</h3>
+                            <div className="mb-3 p-2" style={{ backgroundColor: 'rgba(255, 255, 255, 0.7)', borderRadius: '8px' }}>
+                                <h3 className="text-lg font-bold text-blue-700">Evaluación General</h3>
+                                <div ref={graficaRef}> {/* Referencia a la gráfica */}
                                     <Bar
-                                        data={prepararDatosGrafico(categoria)}
+                                        data={prepararDatosGrafico()}
                                         options={{
+                                            indexAxis: 'y', // Cambia la gráfica a horizontal
                                             responsive: true,
                                             scales: {
-                                                y: {
+                                                x: {
                                                     beginAtZero: true,
                                                     max: 5,
+                                                },
+                                                y: {
+                                                    ticks: {
+                                                        autoSkip: false, // Para mostrar todas las etiquetas
+                                                    },
                                                 },
                                             },
                                             plugins: {
@@ -179,9 +203,10 @@ function EvaluarSoftware() {
                                             barPercentage: 0.5,
                                             categoryPercentage: 0.7,
                                         }}
+                                        height={100} // Ajusta la altura de la gráfica para que sea pequeña
                                     />
                                 </div>
-                            ))}
+                            </div>
                         </div>
                     </div>
                 </div>
