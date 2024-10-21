@@ -13,6 +13,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 const  Card = ({ title, link, icono, className, nombre, ID }) => {
+  const registro = false;
   const navigate = useNavigate();
   const getIcon = (title) => {
     switch (icono) {
@@ -51,7 +52,7 @@ const  Card = ({ title, link, icono, className, nombre, ID }) => {
       const data = await response.json();
       if(response.ok){
         console.log("Rúbrica evaluada", data);
-        navigate('/evaluarSoftware', {state: { jsonToSend: data } });
+        navigate('/evaluarSoftware', {state: { jsonToSend: data, estado: registro } });
 
       }
       else{

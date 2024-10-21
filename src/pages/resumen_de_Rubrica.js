@@ -14,6 +14,7 @@ function Resumen_de_Rubrica() {
     console.log('JSON Recibido:', jsonRecibido);
     const [rubricaData, setRubricaData] = useState(null);
     const [preguntasData, setPreguntasData] = useState([]);
+    const registro = true;
 
     useEffect(() => {
         // Transformar el objeto recibido en el formato requerido
@@ -74,7 +75,7 @@ function Resumen_de_Rubrica() {
 
     const enviarDatos = () => {
         console.log('Datos a enviar:', jsonRecibido);
-        navigate('/registrar_rubrica', { state: { rubrica: jsonRecibido, nombreProyecto } });
+        navigate('/registrar_rubrica', { state: { rubrica: jsonRecibido, nombre: nombreProyecto } });
     }
 
     return (
@@ -98,7 +99,7 @@ function Resumen_de_Rubrica() {
                     {/* Botón para evaluar el software */}
                     <button 
                         className="mb-2 bg-green-500 text-white py-2 px-4 rounded"
-                        onClick={() => navigate('/evaluarSoftware', { state: { jsonToSend: jsonRecibido } })}
+                        onClick={() => navigate('/evaluarSoftware', { state: { jsonToSend: jsonRecibido, estado: registro, nombre: nombreProyecto } })}
                     >
                         Evaluar
                     </button>

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef,useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Bar } from 'react-chartjs-2';
 import 'chart.js/auto';
@@ -6,18 +6,57 @@ import html2canvas from 'html2canvas'; // Importar html2canvas
 import NavBarLog from '../components/NavBarLog';
 import RúbricaPDF from '../components/descargar';
 import fondo from '../assets/fondo.jpg';
+import BotonRegistrar from '../components/registrar_rubrica';
+import { useNavigate } from 'react-router-dom';
 
 function EvaluarSoftware() {
     const location = useLocation();
     const jsonRecibido = location.state?.jsonToSend || [];
+    const registro = location.state?.estado || false;
     const [evaluaciones, setEvaluaciones] = useState({});
     const [mostrarPDF, setMostrarPDF] = useState(false);
     const [categoriasArray, setCategoriasArray] = useState([]);
     const [jsonEvaluaciones, setJsonEvaluaciones] = useState([]);
     const [nombreProyecto, setNombreProyecto] = useState('');
     const [imagenGrafica, setImagenGrafica] = useState(null); // Estado para almacenar la imagen de la gráfica
-
+    const [rubricaData, setRubricaData] = useState(null);
+    const [preguntasData, setPreguntasData] = useState([]);
     const graficaRef = useRef(); // Crear referencia para la gráfica
+    const navigate = useNavigate();
+    const nombre = location.state?.nombre || '';
+
+    useEffect(() => {
+        // Transformar el objeto recibido en el formato requerido
+        const categorias = [...new Set(jsonRecibido.map(item => item.id_categoria))];
+        const criterios = jsonRecibido.map(item => item.id);
+        const preguntas = jsonRecibido.flatMap(item => 
+            item.preguntas.map(pregunta => ({
+                id_criterio: item.id,
+                pregunta: pregunta // Asegurarse de que el campo `pregunta` esté presente
+            }))
+        );
+
+        const rubricaTransformada = {
+            nombre_rubrica: nombre,
+            categorias,
+            criterios
+        };
+
+        setRubricaData(rubricaTransformada);
+        setPreguntasData(preguntas);
+
+        console.log('Rúbrica Transformada:', rubricaTransformada);
+        console.log('Preguntas:', preguntas);
+    }, [jsonRecibido, nombreProyecto]);
+
+    const handleSuccess = () => {
+        navigate('/home'); // Redirigir a una ruta de éxito o mostrar un mensaje de éxito
+    };
+
+    const handleError = (error) => {
+        // Manejar el error, mostrar un mensaje de error al usuario
+        console.error('Error al registrar la rúbrica y las preguntas:', error);
+    };
 
     const handleChange = (criterio, value) => {
         const updatedEvaluaciones = {
@@ -172,6 +211,15 @@ function EvaluarSoftware() {
                                     imagen_grafica={imagenGrafica} // Pasar la imagen a RúbricaPDF
                                     onDownload={handleDownload}
                                 />
+                                
+                            )}
+                            {registro && (
+                               <BotonRegistrar
+                               rubricaData={rubricaData}
+                               preguntasData={preguntasData}
+                               onSuccess={handleSuccess}
+                               onError={handleError}
+                           />
                             )}
                         </div>
 
