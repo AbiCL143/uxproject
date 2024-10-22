@@ -17,17 +17,17 @@ const RubricaPDF = ({ data, nombre_rubrica = "Rúbrica Evaluada", nombre_proyect
 
         // Establecer el color de texto y márgenes internos
         doc.setTextColor(0, 0, 0);
-        doc.setFont("times", "normal");
+        doc.setFont( "normal");
         doc.setFontSize(16);
-        doc.setFont("times", "bold"); // Negrita para nombre_rubrica
+        doc.setFont("bold"); // Negrita para nombre_rubrica
         doc.text(nombre_rubrica, margin + 10, margin + 10);
-        doc.setFont("times", "normal"); // Restablecer a normal
+        doc.setFont("normal"); // Restablecer a normal
         let startY = 30; //Posicion inicial de la tabla
         if (nombre_proyecto) {
-            doc.setFont("times", "bold"); // Negrita para nombre_proyecto
+            doc.setFont("bold"); // Negrita para nombre_proyecto
             startY = 35;
             doc.text(`Nombre del proyecto: ${nombre_proyecto}`, margin + 10, margin + 20);
-            doc.setFont("times", "normal"); // Restablecer a normal
+            doc.setFont("normal"); // Restablecer a normal
         }
 
         const datos = [];
@@ -154,9 +154,9 @@ const RubricaPDF = ({ data, nombre_rubrica = "Rúbrica Evaluada", nombre_proyect
 
             // Agregar texto del resumen
             doc.setFontSize(16);
-            doc.setFont("times", "bold"); // Negrita para "Resumen del software evaluado:"
+            doc.setFont(undefined,"bold"); // Negrita para "Resumen del software evaluado:"
             doc.text("Resumen del software evaluado:", margin + 10, currentY); // Agregar título en negrita
-            doc.setFont("times", "normal"); // Restablecer a normal
+            doc.setFont(undefined,"normal"); // Restablecer a normal
             currentY += rowHeight; // Espacio después del título
             doc.setFontSize(14);
             lines.forEach(line => {
@@ -185,9 +185,9 @@ const RubricaPDF = ({ data, nombre_rubrica = "Rúbrica Evaluada", nombre_proyect
             }
             // Agregar título antes del gráfico
             doc.setFontSize(16);
-            doc.setFont("times", "bold"); // Negrita para "Gráfico general"
+            doc.setFont(undefined,"bold"); // Negrita para "Gráfico general"
             doc.text("Gráfico general:", margin + 10, yPos + 5);
-            doc.setFont("times", "normal"); // Restablecer a normal
+            doc.setFont(undefined,"normal"); // Restablecer a normal
             yPos += rowHeight + 2; // Espacio después del título
 
             doc.addImage(imagen_grafica, "PNG", margin + 10, yPos, 180, 60); // Ajusta la posición y el tamaño

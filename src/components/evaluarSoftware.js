@@ -23,6 +23,24 @@ function EvaluarSoftware() {
     const [jsonEvaluaciones, setJsonEvaluaciones] = useState([]);
     const [todosEvaluados, setTodosEvaluados] = useState(false); // Nuevo estado para verificar si todos los criterios han sido evaluados
 
+    const calcularPuntajeTotal = () => {
+        return Object.values(evaluaciones).reduce((total, puntaje) => total + (puntaje || 0), 0);
+    };
+
+    const puntajeMaximo = jsonRecibido.length * 5;
+
+    const evaluarEstado = (puntajeTotal) => {
+        const porcentaje = (puntajeTotal / puntajeMaximo) * 100;
+        if (porcentaje >= 80) {
+            return 'Excelente';
+        } else if (porcentaje >= 50) {
+            return 'Bueno';
+        } else {
+            return 'Malo';
+        }
+    };
+
+    const puntajeTotal = calcularPuntajeTotal();
     // Función para obtener la imagen más reciente del gráfico
     const obtenerImagenGrafico = () => {
         const chartInstance = chartRef.current;
@@ -63,12 +81,12 @@ function EvaluarSoftware() {
             criterios
         };
 
-        setRubricaData(rubricaTransformada);
+        setRubricaData(rubricaTransformada); 
         setPreguntasData(preguntas);
 
         console.log('Rúbrica Transformada:', rubricaTransformada);
         console.log('Preguntas:', preguntas);
-    }, [jsonRecibido, nombreProyecto]);
+    }, [jsonRecibido, nombre]);
 
     const handleSuccess = () => {
         navigate('/home'); // Redirigir a una ruta de éxito o mostrar un mensaje de éxito

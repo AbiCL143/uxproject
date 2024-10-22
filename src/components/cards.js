@@ -52,7 +52,7 @@ const  Card = ({ title, link, icono, className, nombre, ID }) => {
       const data = await response.json();
       if(response.ok){
         console.log("Rúbrica evaluada", data);
-        navigate('/evaluarSoftware', {state: { jsonToSend: data, estado: registro } });
+        navigate('/evaluarSoftware', {state: { jsonToSend: data, estado: registro, nombre: title } });
 
       }
       else{
