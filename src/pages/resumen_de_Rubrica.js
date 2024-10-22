@@ -88,13 +88,14 @@ function Resumen_de_Rubrica() {
                     <div className="text-4xl font-bold text-left bg-gradient-to-r text-white from-1% to-Degradado2 bg-clip-text text-transparent p-6">
                         Resumen de la rúbrica
                     </div>
+                    {/* Asegúrate de pasar pdfHabilitado={true} */}
                     
                     <div className='flex flex-auto items-center space-x-4'>
                     {/* Asegúrate de pasar pdfHabilitado={true} */}
-                    <RúbricaPDF 
-                        data={{ nombre_proyecto: {nombreProyecto}, categorias: categoriasArray }} 
+                    <RúbricaPDF nombre_proyecto={nombreProyecto}
+                        data={{ nombre_rubrica:{nombreProyecto}, categorias: categoriasArray }} 
                         pdfHabilitado={true} // Botón habilitado
-                    />
+                    />
                     <BotonRegistrar 
                         rubricaData={rubricaData}
                         preguntasData={preguntasData}
