@@ -4,7 +4,7 @@ import "jspdf-autotable";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDownload } from "@fortawesome/free-solid-svg-icons";
 
-const RubricaPDF = ({ data, nombre_rubrica = "Rúbrica Evaluada", nombre_proyecto, imagen_grafica }) => {
+const RubricaPDF = ({ data, nombre_rubrica = "Rúbrica Evaluada", nombre_proyecto, imagen_grafica, pdfHabilitado, onDownload }) => {
     const [criterios, setCriterios] = useState([]);
     const [puntajes, setPuntajes] = useState([]);
 
@@ -156,7 +156,7 @@ const RubricaPDF = ({ data, nombre_rubrica = "Rúbrica Evaluada", nombre_proyect
             doc.setFontSize(16);
             doc.setFont("times", "bold"); // Negrita para "Resumen del software evaluado:"
             doc.text("Resumen del software evaluado:", margin + 10, currentY); // Agregar título en negrita
-            doc.setFont("times", "normal"); // Negrita para "Resumen del software evaluado:"
+            doc.setFont("times", "normal"); // Restablecer a normal
             currentY += rowHeight; // Espacio después del título
             doc.setFontSize(14);
             lines.forEach(line => {
@@ -168,8 +168,13 @@ const RubricaPDF = ({ data, nombre_rubrica = "Rúbrica Evaluada", nombre_proyect
             yPos = currentY; // Guardamos la nueva posición Y después del resumen
         };
 
-        // Llamar a la función para agregar el resumen
-        agregarResumen();
+        // Verificar si hay criterios seleccionados antes de generar el resumen
+        if (criterios_seleccionados > 0) {
+            // Llamar a la función para agregar el resumen
+            agregarResumen();
+        } else {
+            console.log("No se generó el resumen porque no hay puntajes para los criterios.");
+        }
 
         // Agregar la imagen de la gráfica después del resumen
         if (imagen_grafica) {
@@ -185,10 +190,15 @@ const RubricaPDF = ({ data, nombre_rubrica = "Rúbrica Evaluada", nombre_proyect
             doc.setFont("times", "normal"); // Restablecer a normal
             yPos += rowHeight + 2; // Espacio después del título
 
-            doc.addImage(imagen_grafica, "PNG", margin + 10, yPos, 150, 70); // Ajusta la posición y el tamaño
+            doc.addImage(imagen_grafica, "PNG", margin + 10, yPos, 180, 60); // Ajusta la posición y el tamaño
         }
 
         doc.save("rubrica_evaluada.pdf");
+
+        // Llama a la función para habilitar la desactivación en el componente padre, solo si existe
+        if (onDownload) {
+            onDownload();
+        }
     };
 
     return (
@@ -196,10 +206,11 @@ const RubricaPDF = ({ data, nombre_rubrica = "Rúbrica Evaluada", nombre_proyect
             <button
                 type="button"
                 onClick={generarPDF}
-                className="focus:outline-none bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded flex items-center"
+                className={`focus:outline-none ${pdfHabilitado ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-400'} text-white font-bold py-2 px-4 rounded flex items-center`}
+                disabled={!pdfHabilitado} // Cambiar a utilizar pdfHabilitado
             >
                 <FontAwesomeIcon icon={faDownload} className="mr-2" />
-                Descargar PDF
+                {!pdfHabilitado ? "PDF Descargado" : "Descargar PDF"}
             </button>
         </div>
     );
