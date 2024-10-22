@@ -198,16 +198,7 @@ function EvaluarSoftware() {
                                 </h3>
                             </div>
 
-                            {mostrarPDF && (
-                                <RúbricaPDF
-                                    data={{ categorias: categoriasArray }}
-                                    nombre_rubrica={"Nombre de tu Rúbrica"}
-                                    nombre_proyecto={nombreProyecto}
-                                    imagen_grafica={imagenGrafica} // Pasar la imagen a RúbricaPDF
-                                    onDownload={handleDownload}
-                                />
-                                
-                            )}
+                           {/* Mostrar el componente RúbricaPDF */}
                             {registro && (
                                <BotonRegistrar
                                rubricaData={rubricaData}
@@ -270,7 +261,7 @@ function EvaluarSoftware() {
                     {mostrarPDF && (
                         <RúbricaPDF
                             data={{ categorias: categoriasArray }}
-                            nombre_rubrica={"Nombre de tu Rúbrica"}
+                            nombre_rubrica={nombre}
                             nombre_proyecto={nombreProyecto}
                             imagen_grafica={imagenGrafica} // Pasar la imagen a RúbricaPDF
                             pdfHabilitado={!pdfDeshabilitado} // Habilitar el botón de descarga
