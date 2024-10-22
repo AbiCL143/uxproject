@@ -1,11 +1,10 @@
-import React, { useState, useRef,useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Bar } from 'react-chartjs-2';
 import 'chart.js/auto';
-import html2canvas from 'html2canvas'; // Importar html2canvas
 import NavBarLog from '../components/NavBarLog';
-import RúbricaPDF from '../components/descargar';
 import fondo from '../assets/fondo.jpg';
+import RúbricaPDF from './descargar';
 import BotonRegistrar from '../components/registrar_rubrica';
 import { useNavigate } from 'react-router-dom';
 
@@ -14,14 +13,36 @@ function EvaluarSoftware() {
     const jsonRecibido = location.state?.jsonToSend || [];
     const registro = location.state?.estado || false;
     const [evaluaciones, setEvaluaciones] = useState({});
-    const [mostrarPDF, setMostrarPDF] = useState(false);
-    const [categoriasArray, setCategoriasArray] = useState([]);
-    const [jsonEvaluaciones, setJsonEvaluaciones] = useState([]);
     const [nombreProyecto, setNombreProyecto] = useState('');
+    const chartRef = useRef(null); // Referencia a la gráfica
     const [imagenGrafica, setImagenGrafica] = useState(null); // Estado para almacenar la imagen de la gráfica
     const [rubricaData, setRubricaData] = useState(null);
-    const [preguntasData, setPreguntasData] = useState([]);
-    const graficaRef = useRef(); // Crear referencia para la gráfica
+    const [preguntasData, setPreguntasData] = useState([]);    const [categoriasArray, setCategoriasArray] = useState([]);
+    const [mostrarPDF, setMostrarPDF] = useState(false); // Controla la visualización del PDF
+    const [pdfDeshabilitado, setPdfDeshabilitado] = useState(true); // Inicialmente deshabilitado
+    const [jsonEvaluaciones, setJsonEvaluaciones] = useState([]);
+    const [todosEvaluados, setTodosEvaluados] = useState(false); // Nuevo estado para verificar si todos los criterios han sido evaluados
+
+    // Función para obtener la imagen más reciente del gráfico
+    const obtenerImagenGrafico = () => {
+        const chartInstance = chartRef.current;
+        if (chartInstance) {
+            return chartInstance.toBase64Image(); // Retorna la imagen como base64
+        }
+        return null;
+    };
+
+    const generarPDF = () => {
+        const imagenBase64 = obtenerImagenGrafico();
+        if (imagenBase64) {
+            setImagenGrafica(imagenBase64); // Guarda la imagen del gráfico
+            setMostrarPDF(true); // Activa la visualización del PDF
+            setPdfDeshabilitado(false); // Habilita el botón de descarga al generar el PDF
+        } else {
+            console.error("Error al obtener la imagen del gráfico");
+            return -1; // Devuelve un código de error si falla
+        }
+    };
     const navigate = useNavigate();
     const nombre = location.state?.nombre || '';
 
@@ -87,39 +108,10 @@ function EvaluarSoftware() {
         setJsonEvaluaciones(nuevoJsonEvaluaciones);
         setCategoriasArray(nuevoJsonEvaluaciones);
 
-        if (jsonRecibido.every(item => updatedEvaluaciones[item.criterio] !== undefined)) {
-            setMostrarPDF(true);
-            capturarGrafica(); // Capturar la gráfica al mostrar PDF
-        }
+        // Verifica si todos los criterios han sido evaluados
+        const todosEvaluados = jsonRecibido.every(item => updatedEvaluaciones[item.criterio]);
+        setTodosEvaluados(todosEvaluados); // Actualiza el estado
     };
-
-    const capturarGrafica = () => {
-        if (graficaRef.current) {
-            html2canvas(graficaRef.current).then((canvas) => {
-                const imagen = canvas.toDataURL('image/png'); // Convertir el canvas a imagen
-                setImagenGrafica(imagen); // Almacenar la imagen en el estado
-            });
-        }
-    };
-
-    const calcularPuntajeTotal = () => {
-        return Object.values(evaluaciones).reduce((total, puntaje) => total + (puntaje || 0), 0);
-    };
-
-    const puntajeMaximo = jsonRecibido.length * 5;
-
-    const evaluarEstado = (puntajeTotal) => {
-        const porcentaje = (puntajeTotal / puntajeMaximo) * 100;
-        if (porcentaje >= 80) {
-            return 'Excelente';
-        } else if (porcentaje >= 50) {
-            return 'Bueno';
-        } else {
-            return 'Malo';
-        }
-    };
-
-    const puntajeTotal = calcularPuntajeTotal();
 
     const prepararDatosGrafico = () => {
         const criterios = jsonRecibido.map((item) => item.criterio);
@@ -137,9 +129,12 @@ function EvaluarSoftware() {
         };
     };
 
-    const handleDownload = () => {
-        console.log('Nombre del Proyecto desde Evaluar:', nombreProyecto);
-    };
+    // Efecto para habilitar el botón de RúbricaPDF cuando se muestra
+    useEffect(() => {
+        if (mostrarPDF) {
+            setPdfDeshabilitado(false); // Habilita el botón de descarga cuando el PDF se muestra
+        }
+    }, [mostrarPDF]);
 
     return (
         <div className="h-screen overflow-hidden relative"
@@ -153,7 +148,6 @@ function EvaluarSoftware() {
                         Evaluación del Software
                     </h2>
 
-                    {/* Campo de entrada para el nombre del proyecto */}
                     <div className="mb-4">
                         <label className="text-xl font-semibold text-white" htmlFor="nombreProyecto">Nombre del Proyecto a Evaluar (OPCIONAL):</label>
                     </div>
@@ -170,6 +164,7 @@ function EvaluarSoftware() {
 
                     <div className="flex mb-8">
                         <div className="w-1/2">
+                            {/* Formulario de evaluación */}
                             <form>
                                 {jsonRecibido.map((item, index) => (
                                     <div key={index} className="mb-4">
@@ -191,7 +186,7 @@ function EvaluarSoftware() {
                                                         {'⭐'}
                                                     </span>
                                                 </label>
-                                            ))}
+                                            ))} 
                                         </div>
                                     </div>
                                 ))}
@@ -226,11 +221,12 @@ function EvaluarSoftware() {
                         <div className="w-2/5 ml-20">
                             <div className="mb-3 p-2" style={{ backgroundColor: 'rgba(255, 255, 255, 0.7)', borderRadius: '8px' }}>
                                 <h3 className="text-lg font-bold text-blue-700">Evaluación General</h3>
-                                <div ref={graficaRef}> {/* Referencia a la gráfica */}
+                                <div>
                                     <Bar
+                                        ref={chartRef} // Asigna la referencia aquí
                                         data={prepararDatosGrafico()}
                                         options={{
-                                            indexAxis: 'y', // Cambia la gráfica a horizontal
+                                            indexAxis: 'y',
                                             responsive: true,
                                             scales: {
                                                 x: {
@@ -239,7 +235,7 @@ function EvaluarSoftware() {
                                                 },
                                                 y: {
                                                     ticks: {
-                                                        autoSkip: false, // Para mostrar todas las etiquetas
+                                                        autoSkip: false,
                                                     },
                                                 },
                                             },
@@ -251,12 +247,36 @@ function EvaluarSoftware() {
                                             barPercentage: 0.5,
                                             categoryPercentage: 0.7,
                                         }}
-                                        height={100} // Ajusta la altura de la gráfica para que sea pequeña
+                                        height={100}
                                     />
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    {/* Mostrar el botón para evaluar el software solo si todos los criterios han sido evaluados */}
+                    {todosEvaluados && (
+                        <div className="mt-4">
+                            <button
+                                onClick={generarPDF} // Llama a generarPDF directamente
+                                className="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700 ml-4"
+                            >
+                                Evaluar Software
+                            </button>
+                        </div>
+                    )}
+
+                    {/* Mostrar el componente RúbricaPDF */}
+                    {mostrarPDF && (
+                        <RúbricaPDF
+                            data={{ categorias: categoriasArray }}
+                            nombre_rubrica={"Nombre de tu Rúbrica"}
+                            nombre_proyecto={nombreProyecto}
+                            imagen_grafica={imagenGrafica} // Pasar la imagen a RúbricaPDF
+                            pdfHabilitado={!pdfDeshabilitado} // Habilitar el botón de descarga
+                            onDownload={() => setPdfDeshabilitado(true)} // Callback para deshabilitar el PDF
+                        />
+                    )}
                 </div>
             </div>
         </div>
